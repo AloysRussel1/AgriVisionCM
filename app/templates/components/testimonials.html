@@ -1,0 +1,33 @@
+<!-- app/templates/components/testimonials.html -->
+<section class="testimonials">
+    <h2 class="section-title">Ce que disent nos utilisateurs</h2>
+    <div class="testimonial-container">
+        <div class="testimonial-item">
+            <blockquote>
+                "Grâce à AgriVisionCM, j'ai pu optimiser mes ventes comme jamais auparavant. La précision des prévisions est incroyable!"
+            </blockquote>
+            <div class="testimonial-author">
+                <img src="{{ url_for('static', filename='img/user1.jpg') }}" alt="Photo de Jean Dupont">
+                <cite>Jean Dupont, Agriculteur</cite>
+            </div>
+        </div>
+        <div class="testimonial-item">
+            <blockquote>
+                "Une vraie révolution pour notre exploitation. Nous avons réduit nos pertes et augmenté notre productivité."
+            </blockquote>
+            <div class="testimonial-author">
+                <img src="{{ url_for('static', filename='img/user2.jpg') }}" alt="Photo de Sophie Martin">
+                <cite>Sophie Martin, Gérante</cite>
+            </div>
+        </div>
+        <div class="testimonial-item">
+            <blockquote>
+                "Je recommande AgriVisionCM à tous mes collègues. C'est un outil indispensable pour la gestion moderne des cultures."
+            </blockquote>
+            <div class="testimonial-author">
+                <img src="{{ url_for('static', filename='img/user3.jpg') }}" alt="Photo de Pierre Lefèvre">
+                <cite>Pierre Lefèvre, Fermier</cite>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,54 @@
+/* app/static/css/style.css */
+:root {
+    --primary-color: #4CAF50; /* Vert */
+    --secondary-color: #ffffff; /* Blanc */
+    --text-color: #333333; /* Gris foncé pour le texte */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.content {
+    margin-left: 250px; /* Largeur du sidebar */
+    padding: 20px;
+    width: calc(100% - 250px);
+}
+
+/* Styles pour les liens de navigation */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Styles pour les boutons */
+.button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.button:hover {
+    background-color: #45a049;
+}

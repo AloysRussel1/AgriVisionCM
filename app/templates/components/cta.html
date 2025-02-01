@@ -1,0 +1,17 @@
+<!-- app/templates/components/cta.html -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Prêt à transformer votre agriculture?</h2>
+        <p>Rejoignez AgriVisionCM pour bénéficier de:</p>
+        <ul class="cta-list">
+            <li><i class="fas fa-check-circle"></i> Prédictions de prix précises</li>
+            <li><i class="fas fa-check-circle"></i> Support de la communauté agricole</li>
+            <li><i class="fas fa-check-circle"></i> Outils pour optimiser vos ventes</li>
+            <li><i class="fas fa-check-circle"></i> Personnalisation selon vos besoins</li>
+        </ul>
+        <div class="cta-buttons">
+            <a href="{{ url_for('main.predict') }}" class="cta-button">Commencer Maintenant</a>
+            <a href="{{ url_for('main.about') }}" class="cta-button secondary">En savoir plus</a>
+        </div>
+    </div>
+</section>

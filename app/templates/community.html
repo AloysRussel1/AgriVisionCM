@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}Communauté - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}  
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="community-hero">
+        <h1>La Communauté <span class="highlight">AgriVisionCM</span></h1>
+        <p>Partagez, apprenez et grandissez avec nous.</p>
+    </section>
+
+    <section class="community-sections">
+        <div class="section">
+            <h2>Discussions et Forums</h2>
+            <p>Rejoignez des discussions sur les meilleures pratiques agricoles, les défis actuels, et découvrez les dernières innovations.</p>
+            <a href="{{ url_for('main.forums') }}" class="cta-button">Discuter</a>
+        </div>
+        <div class="section">
+            <h2>Ressources Partagées</h2>
+            <p>Accédez à une bibliothèque de documents, guides, et études de cas pour améliorer vos pratiques agricoles.</p>
+            <a href="{{ url_for('main.resources') }}" class="cta-button">Explorer</a>
+        </div>
+        <div class="section">
+            <h2>Événements et Webinaires</h2>
+            <p>Participez à des événements en ligne ou locaux pour rencontrer des experts et autres agriculteurs.</p>
+            <a href="{{ url_for('main.events') }}" class="cta-button">S'inscrire</a>
+        </div>
+        <div class="section">
+            <h2>Partage de Connaissances</h2>
+            <p>Contribuez et bénéficiez des connaissances collectives à travers des articles de blog, des vidéos et des Q&A.</p>
+            <a href="{{ url_for('main.knowledge') }}" class="cta-button">Partager</a>
+        </div>
+    </section>
+
+    <section class="community-stats">
+        <h2>Statistiques de la Communauté</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>10,000+</h3>
+                <p>Membres Actifs</p>
+            </div>
+            <div class="stat-item">
+                <h3>150+</h3>
+                <p>Événements Organisés</p>
+            </div>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Articles et Guides</p>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+</body>
+</html>

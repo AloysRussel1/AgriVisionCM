@@ -1,0 +1,397 @@
+/* Hero Section */
+
+.hero {
+    display: flex;
+    align-items: flex-start; /* Alignement en haut pour moins d'espace au-dessus du texte */
+    justify-content: center;
+    padding: 50px 20px 0; /* Réduction du padding du haut et ajout de padding au bas pour la transition */
+    min-height: 90vh; /* Réduction de la hauteur pour ajuster l'espace */
+    background: linear-gradient(to bottom right, #ffffff, #e0f8e0); /* Dégradé de blanc à vert très clair */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+/* Search Bar and Icons */
+.header-elements {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.search-bar {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff url('path/to/search-icon.png') 10px center no-repeat;
+    background-size: 20px;
+    padding-left: 40px; /* Adjust based on icon size */
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.search-bar:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+    border-color: #2E8B57;
+}
+
+.hero-content {
+    z-index: 2;
+    max-width: 800px;
+    animation: fadeInUp 1s ease-out forwards;
+    margin-top: 10vh; /* Marge en haut basée sur la hauteur de la vue pour positionner le texte */
+}
+
+.hero-content h1 {
+    font-size: 3.5em;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #333;
+    position: relative;
+}
+
+.hero-content h1 .highlight {
+    color: #2E8B57;
+    display: inline-block;
+    position: relative;
+}
+
+.hero-content h1 .highlight::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: #2E8B57;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.hero-content h1:hover .highlight::after {
+    transform: scaleX(1);
+}
+
+.hero-content p {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+    color: #666;
+    animation: fadeIn 1.5s ease-out forwards;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    animation: fadeInUp 2s ease-out forwards;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.login {
+    background-color: #ffffff;
+    color: #2E8B57;
+    border: 2px solid #2E8B57;
+}
+
+.try {
+    background-color: #2E8B57;
+    color: #ffffff;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(46, 139, 87, 0.2);
+    transform: skewX(-45deg);
+    transition: left 0.3s ease;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.login:hover {
+    background-color: #e0f8e0;
+}
+
+.try:hover {
+    background-color: #4CAF50;
+}
+
+/* Transition vers la section suivante */
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Hauteur de la transition */
+    background: linear-gradient(to top, #ffffff 0%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Features Section */
+.features {
+    padding: 50px 20px;
+    background-color: #ffffff;
+    position: relative;
+    z-index: 1; /* Assure que cette section est au-dessus de la transition du Hero */
+}
+
+.section-title {
+    text-align: center;
+    color: #2E8B57;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px; /* Ajustez selon votre préférence */
+    margin: 0 auto;
+}
+
+.feature-item {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    background-color: #e0f8e0;
+}
+
+/* Ajout pour les images */
+.feature-item .feature-icon {
+    width: 200px; /* Ajustez selon la taille voulue */
+    height: auto;
+    margin: 0 auto 15px; /* Centre l'image horizontalement et ajoute un espace en dessous */
+}
+
+.feature-item h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Animations pour la section Features */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Testimonials Section */
+.testimonials {
+    padding: 50px 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.testimonials .section-title {
+    color: #2E8B57;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.testimonial-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.testimonial-item {
+    flex: 1 0 300px; /* Ajustement pour une répartition équilibrée sur plusieurs colonnes */
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin: 10px; /* Petite marge pour l'espacement */
+    transition: transform 0.3s ease;
+}
+
+.testimonial-item:hover {
+    transform: translateY(-5px);
+}
+
+.testimonial-item blockquote {
+    font-style: italic;
+    color: #333;
+    font-size: 1.1em;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.testimonial-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.testimonial-author cite {
+    font-weight: bold;
+    color: #2E8B57;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(to bottom right, #2E8B57, #98FB98);
+    padding: 50px 20px;
+    text-align: center;
+    color: white;
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.cta-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.cta-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cta-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.cta-list i {
+    color: #f8f9fa;
+    margin-right: 10px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.cta-button {
+    background-color: white;
+    color: #2E8B57;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    background-color: #f0f0f0;
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}

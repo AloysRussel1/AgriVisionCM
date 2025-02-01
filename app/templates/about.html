@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}À Propos - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}  <!-- Inclut les styles de base.html -->
+        <style>
+            :root {
+                --about-bg: url('{{ url_for('static', filename='img/about-bg.jpg') }}');
+            }
+        </style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="about-hero">
+        <div class="hero-content">
+            <h1>À propos de <span class="highlight">AgriVisionCM</span></h1>
+            <p>Transformons ensemble l'agriculture de demain</p>
+        </div>
+    </section>
+
+    <section class="about-content">
+        <div class="mission">
+            <h2>Notre Mission</h2>
+            <p>Nous visons à révolutionner le secteur agricole avec des technologies prédictives avancées, permettant aux agriculteurs de prendre des décisions éclairées, d'optimiser leurs ressources et de maximiser leurs rendements tout en préservant l'environnement.</p>
+        </div>
+
+        <div class="vision">
+            <h2>Notre Vision</h2>
+            <p>Un monde où chaque agriculteur a accès à des outils de prédiction de pointe pour une agriculture durable et prospère.</p>
+        </div>
+
+        <div class="team">
+            <h2>Notre Équipe</h2>
+            <p>Composée de scientifiques des données, d'agronomes, et de développeurs passionnés par l'agriculture, notre équipe travaille sans relâche pour vous fournir des solutions technologiques qui répondent aux défis réels du terrain.</p>
+        </div>
+
+        <div class="how-it-works">
+            <h2>Comment ça marche?</h2>
+            <ol>
+                <li><strong>Collecte de données</strong>: Nous rassemblons des données de marché, météorologiques, et agricoles en temps réel.</li>
+                <li><strong>Analyse prédictive</strong>: Nos algorithmes analysent ces données pour fournir des prévisions précises des prix.</li>
+                <li><strong>Interface utilisateur</strong>: Les agriculteurs accèdent à ces prévisions via une interface intuitive.</li>
+                <li><strong>Support et communauté</strong>: Nous offrons un support continu et une plateforme pour partager des connaissances et des expériences.</li>
+            </ol>
+        </div>
+
+        <div class="contact-us">
+            <h2>Contactez-nous</h2>
+            <p>Pour toute question, partenariat ou opportunité, n'hésitez pas à nous contacter:</p>
+            <a href="aloysrussel1@gmail.com" class="contact-button">Envoyer un email</a>
+        </div>
+    </section>
+    {% endblock %}
+</body>
+</html>
