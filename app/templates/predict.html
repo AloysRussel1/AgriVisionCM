@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}Prédire - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/predict.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="predict-hero">
+        <h1>Prédiction des Prix par IA</h1>
+        <p>Utilisez notre intelligence artificielle pour prévoir les fluctuations de prix.</p>
+    </section>
+
+    <section class="prediction-form">
+        <h2>Prédisez avec notre IA</h2>
+        <form id="prediction-form">
+            <div class="form-group">
+                <label for="product">Produit</label>
+                <input type="text" id="product" name="product" placeholder="Entrez le nom du produit" required>
+            </div>
+            <div class="form-group">
+                <label for="region">Région</label>
+                <select id="region" name="region" required>
+                    <option value="">Sélectionnez une région</option>
+                    <option value="Centre">Centre</option>
+                    <option value="Littoral">Littoral</option>
+                    <!-- Ajoutez d'autres options selon vos régions -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <button type="submit" class="cta-button">Prédire</button>
+        </form>
+        <div id="loading-indicator" class="hidden">Chargement...</div>
+    </section>
+
+    <section class="prediction-results" id="results" style="display: none;">
+        <h2>Résultats de la Prédiction</h2>
+        <div id="prediction-chart"></div>
+        <div id="prediction-details">
+            <p><strong>Prix Prédit:</strong> <span id="predicted-price"></span></p>
+            <p><strong>Confiance:</strong> <span id="confidence-level"></span></p>
+            <p><strong>Facteurs Clés:</strong> <span id="key-factors"></span></p>
+        </div>
+    </section>
+
+    <section class="prediction-insights" id="insights" style="display: none;">
+        <h2>Insights et Recommandations</h2>
+        <p>Voici quelques recommandations basées sur votre prédiction:</p>
+        <ul id="recommendations">
+            <!-- Les recommandations seront ajoutées ici dynamiquement -->
+        </ul>
+    </section>
+    {% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='js/predict.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

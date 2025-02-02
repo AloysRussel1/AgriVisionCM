@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}Historique des Prix - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="history-hero">
+        <h1>Historique des Prix</h1>
+        <p>Explorez les tendances passées pour anticiper l'avenir.</p>
+    </section>
+
+    <section class="history-filter">
+        <h2>Filtrer l'Historique</h2>
+        <form id="history-filter-form">
+            <div class="form-group">
+                <label for="product">Produit</label>
+                <select id="product" name="product" required>
+                    <option value="">Sélectionnez un produit</option>
+                    <option value="maïs">Maïs</option>
+                    <option value="cacao">Cacao</option>
+                    <!-- Ajoutez d'autres options selon vos produits -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="region">Région</label>
+                <select id="region" name="region" required>
+                    <option value="">Sélectionnez une région</option>
+                    <option value="Centre">Centre</option>
+                    <option value="Littoral">Littoral</option>
+                    <!-- Ajoutez d'autres options selon vos régions -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date-range">Période</label>
+                <input type="date" id="start-date" name="start-date" required>
+                <span>à</span>
+                <input type="date" id="end-date" name="end-date" required>
+            </div>
+            <button type="submit" class="cta-button">Filtrer</button>
+        </form>
+    </section>
+
+    <section class="history-results" id="results">
+        <h2>Résultats de l'Historique</h2>
+        <div class="chart-container">
+            <canvas id="price-history-chart"></canvas>
+        </div>
+        <div id="history-details">
+            <p><strong>Prix Moyen:</strong> <span id="average-price"></span></p>
+            <p><strong>Écart de Prix:</strong> <span id="price-range"></span></p>
+            <p><strong>Prix le Plus Haut:</strong> <span id="highest-price"></span></p>
+            <p><strong>Prix le Plus Bas:</strong> <span id="lowest-price"></span></p>
+        </div>
+    </section>
+
+    <section class="history-insights">
+        <h2>Analyse des Tendances</h2>
+        <p>Voici quelques observations basées sur les données historiques:</p>
+        <ul id="trend-analysis">
+            <!-- Les analyses de tendances seront ajoutées ici dynamiquement -->
+        </ul>
+    </section>
+    {% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

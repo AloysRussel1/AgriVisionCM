@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}Ressources - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}  
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/resources.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="resources-hero">
+        <h1>Explorez nos <span class="highlight">Ressources</span></h1>
+        <p>Outils, guides, et connaissances pour optimiser votre agriculture.</p>
+    </section>
+
+    <section class="resource-categories">
+        <h2>Catégories de Ressources</h2>
+        <div class="category-grid">
+            <div class="category-item">
+                <h3>Guides Pratiques</h3>
+                <p>Des guides détaillés pour chaque étape de votre processus agricole.</p>
+                <a href="{{ url_for('main.category', category='guides') }}" class="cta-button">Explorer</a>
+            </div>
+            <div class="category-item">
+                <h3>Outils de Prévision</h3>
+                <p>Outils et logiciels pour prédire les tendances de marché et les conditions agricoles.</p>
+                <a href="{{ url_for('main.category', category='tools') }}" class="cta-button">Utiliser</a>
+            </div>
+            <div class="category-item">
+                <h3>Études de Cas</h3>
+                <p>Apprenez des succès et des défis de vos pairs dans l'agriculture.</p>
+                <a href="{{ url_for('main.category', category='case-studies') }}" class="cta-button">Lire</a>
+            </div>
+            <div class="category-item">
+                <h3>Statistiques et Données</h3>
+                <p>Accédez à des données et statistiques pour informer vos décisions.</p>
+                <a href="{{ url_for('main.category', category='data') }}" class="cta-button">Accéder</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-resources">
+        <h2>Ressources en Vedette</h2>
+        <div class="featured-grid">
+            <div class="resource-item">
+                <h3>Guide de la Gestion des Cultures</h3>
+                <p>Des techniques pour maximiser le rendement et la qualité.</p>
+                <a href="{{ url_for('main.resource', resource_id='crop-management') }}" class="cta-button">Télécharger</a>
+            </div>
+            <div class="resource-item">
+                <h3>Analyse des Prix du Cacao</h3>
+                <p>Les tendances actuelles et prévisions pour le marché du cacao.</p>
+                <a href="{{ url_for('main.resource', resource_id='cacao-analysis') }}" class="cta-button">Lire</a>
+            </div>
+            <!-- Ajoutez d'autres ressources en vedette ici -->
+        </div>
+    </section>
+
+    <section class="resource-library">
+        <h2>Notre Bibliothèque</h2>
+        <p>Parcourez notre collection complète de ressources.</p>
+        <form class="search-form">
+            <input type="text" placeholder="Rechercher des ressources..." class="search-input">
+            <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+        </form>
+        <div class="resource-list">
+            <div class="resource-item">
+                <h3>Gestion de l'Eau pour l'Agriculture</h3>
+                <p>Stratégies pour une irrigation efficace.</p>
+                <a href="#" class="cta-button">Voir</a>
+            </div>
+            <!-- Ajoutez d'autres items de la bibliothèque ici -->
+        </div>
+    </section>
+    {% endblock %}
+</body>
+</html>

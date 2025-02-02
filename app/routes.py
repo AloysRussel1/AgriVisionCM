@@ -45,3 +45,17 @@ def knowledge():
 @main.route('/edit_profile')
 def edit_profile():
     return render_template('edit_profile.html', title='Editer votre profil')
+
+@main.route('/auth')
+def authentification():
+    return render_template('auth.html', title='Authentification')
+
+@main.route('/category/<category>')
+def category(category):
+    # Logique pour afficher la page de la catégorie spécifiée
+    return render_template('category.html', category=category, title=f'Catégorie - {category.capitalize()}')
+
+@main.route('/resource/<resource_id>')
+def resource(resource_id):
+    # Logique pour afficher la ressource spécifiée
+    return render_template('resource.html', resource_id=resource_id, title=f'Ressource - {resource_id.replace("-", " ").capitalize()}')
