@@ -41,3 +41,7 @@ def events():
 @main.route('/knowledge')
 def knowledge():
     return render_template('knowledge.html', title='Partage de Connaissances')
+
+@main.route('/edit_profile')
+def edit_profile():
+    return render_template('edit_profile.html', title='Editer votre profil')

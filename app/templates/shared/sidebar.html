@@ -8,8 +8,8 @@
         <li><a href="{{ url_for('main.history') }}" aria-label="Historique des Prix"><i class="fas fa-history" aria-hidden="true"></i> Historique des Prix</a></li>
         <li><a href="{{ url_for('main.resources') }}" aria-label="Ressources"><i class="fas fa-book" aria-hidden="true"></i> Ressources</a></li>
         <li><a href="{{ url_for('main.about') }}" aria-label="À Propos"><i class="fas fa-info-circle" aria-hidden="true"></i> À Propos</a></li>
-        <li><a href="{{ url_for('main.profile') }}" aria-label="Profil"><i class="fas fa-user" aria-hidden="true"></i> Profil</a></li>
         <li><a href="{{ url_for('main.community') }}" aria-label="Communauté"><i class="fas fa-users" aria-hidden="true"></i> Communauté</a></li>
+        <li><a href="{{ url_for('main.profile') }}" aria-label="Profil"><i class="fas fa-user" aria-hidden="true"></i> Profil</a></li>
     </ul>
     <div class="sidebar-footer">
         {% set current_user = {'is_authenticated': True, 'username': 'Aloys Russel', 'photo': 'user.png'} %}  <!-- Simulez une photo d'utilisateur -->
