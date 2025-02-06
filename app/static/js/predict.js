@@ -26,7 +26,7 @@ document.getElementById('prediction-form').addEventListener('submit', function(e
         new Chart(ctx, {
             type: 'line',
             data: data.chart_data,
-            options: {...} // Options de configuration du graphique
+            // options: {...} // Options de configuration du graphique
         });
         
         // Mettre à jour les recommandations

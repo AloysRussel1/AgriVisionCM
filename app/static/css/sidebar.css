@@ -54,6 +54,8 @@
     background-color: #f0f0f0;
     color: #4CAF50;
     border-left: 4px solid #4CAF50;
+    padding: 8px;
+    transition-delay: 5ms;
 }
 
 .sidebar-menu li i {
