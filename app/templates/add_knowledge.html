@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Ajouter une Connaissance - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_knowledge.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-title">
+    <h1>Ajoutez une <span class="highlight">Connaissance</span></h1>
+    <p>Partagez un article, une vidéo ou une réponse à une question, ou uploadez un fichier.</p>
+</section>
+
+<section class="form-container">
+    <form method="POST" action="{{ url_for('main.add_knowledge') }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        
+        <label for="title">Titre :</label>
+        {{ form.title(class="form-input", placeholder="Titre de l'article ou de la vidéo") }}
+        
+        <label for="type">Type :</label>
+        {{ form.type(class="form-select") }}
+        
+        <label for="content">Contenu (texte ou URL) :</label>
+        {{ form.content(class="form-textarea", placeholder="Texte de l'article ou URL de la vidéo") }}
+        
+        <label for="file_upload">Fichier/Vidéo :</label>
+        {{ form.file_upload(class="form-file") }}
+        
+        <button type="submit" class="cta-button">Publier</button>
+    </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/add_knowledge.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,68 @@
+/* add_knowledge.css */
+
+/* Conteneur principal du formulaire */
+.form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mise en forme globale du formulaire */
+.form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style des labels */
+.form-container label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Styles des champs de saisie, zones de texte, sélecteurs et upload */
+.form-container .form-input,
+.form-container .form-select,
+.form-container .form-textarea,
+.form-container .form-file {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Ajustement pour le textarea */
+.form-container .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Style du bouton d'envoi (CTA) */
+.cta-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #218838;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+        margin: 20px;
+    }
+}

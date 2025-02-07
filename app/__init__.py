@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -9,6 +10,8 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.config['SECRET_KEY'] = '11111'  # Remplissez avec une clé secrète
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

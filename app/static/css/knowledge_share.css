@@ -1,3 +1,4 @@
+/* Styles globaux */
 body {
     font-family: 'Arial', sans-serif;
     background: #f4f4f4;
@@ -5,29 +6,30 @@ body {
     line-height: 1.6;
 }
 
+/* Titre de la page */
 .page-title {
     text-align: center;
     padding: 2rem 0;
 }
-
 .page-title h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #4CAF50;
+    color: #4CAF50; /* Vert principal */
 }
-
 .page-title .highlight {
-    color: #FFD700;
+    color: #FF8C00; /* Nuance d'orange/or */
 }
 
+/* Contrôles en haut de page */
 .knowledge-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
     background: #e7e7e7;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-
 .cta-button {
     background: #4CAF50;
     color: white;
@@ -37,101 +39,121 @@ body {
     text-decoration: none;
     transition: background 0.3s ease;
 }
-
 .cta-button:hover {
     background: #45a049;
 }
-
 .filter-section {
     display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 }
-
 .filter-button {
     background: #4CAF50;
     border: none;
     color: white;
     padding: 10px 15px;
-    margin-left: 5px;
     cursor: pointer;
     border-radius: 4px;
     transition: background 0.3s ease;
 }
-
-.filter-button:hover, .filter-button.active {
+.filter-button:hover,
+.filter-button.active {
     background: #45a049;
 }
 
+/* Grille d'affichage des ressources */
 .knowledge-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Réduction de la taille minimale */
     gap: 20px;
     padding: 2rem;
 }
 
+/* Carte individuelle de ressource */
 .knowledge-item {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
-
 .knowledge-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Vignette (image) */
 .item-thumbnail .thumbnail {
     width: 100%;
-    height: 200px;
+    height: 150px; /* Hauteur réduite pour un affichage plus compact */
     object-fit: cover;
 }
 
+/* Contenu de la carte */
 .item-content {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
-
 .item-content h2 {
     margin-top: 0;
-    color: #2c3e50;
+    color: #2E7D32; /* Vert foncé pour le titre */
+    font-size: 1.5rem;
 }
-
 .item-content .info {
     font-size: 0.9em;
     color: #7f8c8d;
     margin-bottom: 15px;
 }
-
 .item-content .item-body {
     margin-bottom: 10px;
+    font-size: 0.95rem;
+    flex-grow: 1;
 }
-
 .item-content .read-more {
-    color: #3498db;
+    color: #FF8C00; /* Orange foncé pour le lien "Lire la suite" */
     text-decoration: none;
 }
-
 .item-content .read-more:hover {
     text-decoration: underline;
 }
 
+/* Pied de carte : positionné en bas grâce à flex */
+.item-footer {
+    margin-top: auto;
+    text-align: right;
+}
+
+/* Bouton de lecture sous forme de lien, sans bordure */
+.cta-read {
+    color: #4CAF50; /* Couleur verte du thème */
+    text-decoration: none;
+    font-weight: bold;
+}
+.cta-read:hover {
+    text-decoration: underline;
+}
+
+/* Badge de type */
 .item-content .type {
     font-size: 0.8em;
-    padding: 5px;
-    background: #e74c3c;
-    color: white;
+    padding: 5px 8px;
     border-radius: 3px;
+    color: white;
     display: inline-block;
+    text-transform: uppercase;
+    background: #FF7043; /* Couleur par défaut (une nuance d'orange) */
 }
-
+/* Couleurs spécifiques par type */
 .knowledge-item[data-type="video"] .type {
-    background: #27ae60;
+    background: #27ae60; /* Vert pour les vidéos */
 }
-
 .knowledge-item[data-type="article"] .type {
-    background: #3498db;
+    background: #FF9800; /* Orange pour les articles */
 }
-
 .knowledge-item[data-type="qna"] .type {
-    background: #9b59b6;
+    background: #FF7043; /* Même orange que par défaut pour Q&A */
 }
