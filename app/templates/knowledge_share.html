@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% extends "base.html" %}
+    {% block title %}Partage de Connaissances - AgriVisionCM{% endblock %}
+    {% block styles %}
+        {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_share.css') }}">
+    {% endblock %}
+    {% block scripts %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='js/knowledge_share.js') }}"></script>
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <section class="page-title">
+        <h1>Partage de <span class="highlight">Connaissances</span></h1>
+        <p>Explorez, apprenez et partagez vos connaissances agricoles.</p>
+    </section>
+
+    <section class="knowledge-controls">
+        <a href="{{ url_for('main.add_knowledge') }}" class="cta-button">Contribuer</a>
+        <div class="filter-section">
+            <button class="filter-button active" data-filter="all">Tous</button>
+            <button class="filter-button" data-filter="article">Articles</button>
+            <button class="filter-button" data-filter="video">Vidéos</button>
+            <button class="filter-button" data-filter="qna">Q&A</button>
+        </div>
+    </section>
+
+    <section class="knowledge-grid">
+        {% for item in knowledge_items %}
+        <article class="knowledge-item" data-type="{{ item.type }}">
+            <div class="item-thumbnail">
+                {% if item.type == 'video' %}
+                    <img src="{{ url_for('static', filename='img/video-thumb.jpg') }}" alt="Video Thumbnail" class="thumbnail">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/article-thumb.jpg') }}" alt="Article Thumbnail" class="thumbnail">
+                {% endif %}
+            </div>
+            <div class="item-content">
+                <h2>{{ item.title }}</h2>
+                <p class="info">Par {{ item.user.username }} | {{ item.created_at.strftime('%d/%m/%Y') }}</p>
+                <div class="item-body">
+                    {% if item.type == 'video' %}
+                        <iframe width="100%" height="200" src="{{ item.content }}" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% else %}
+                        <p>{{ item.content | truncate(200, true) }} <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="read-more">Lire la suite...</a></p>
+                    {% endif %}
+                </div>
+                <p class="type"><span>{{ item.type }}</span></p>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+    {% endblock %}
+</body>
+</html>

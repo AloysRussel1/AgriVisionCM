@@ -23,7 +23,14 @@ def create_app():
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    from .model.user_model import User  # Assurez-vous d'importer vos modèles
+    from .model.user_model import User  
+    from .model.forum_model import Forum
+    from .model.comment_model import Comment
+    from .model.resource_model import Resource
+    from .model.event_model import Event
+    from .model.registration_model import Registration
+    from .model.knowledge_share_model import KnowledgeShare
+
 
     migrate.init_app(app, db)  # Initialise Flask-Migrate
 

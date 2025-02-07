@@ -12,7 +12,6 @@
         <li><a href="{{ url_for('main.profile') }}" aria-label="Profil"><i class="fas fa-user" aria-hidden="true"></i> Profil</a></li>
     </ul>
     <div class="sidebar-footer">
-        {% set current_user = {'is_authenticated': True, 'username': 'Aloys Russel', 'photo': 'user.png'} %}  <!-- Simulez une photo d'utilisateur -->
         {% if current_user.is_authenticated %}
         <div class="user-info">
             {% if current_user.photo %}
@@ -22,11 +21,11 @@
             {% endif %}
             <span>{{ current_user.username }}</span>
             <div class="user-dropdown">
-                <a href="#" class="logout" aria-label="Se déconnecter">Se déconnecter</a>
+                <a href="{{ url_for('auth.logout') }}" class="logout" aria-label="Se déconnecter">Se déconnecter</a>
             </div>
         </div>
         {% else %}
-        <a href="#" class="login" aria-label="Se connecter">Se connecter</a>
+        <a href="{{ url_for('auth.authentification') }}" class="login" aria-label="Se connecter">Se connecter</a>
         {% endif %}
     </div>
 </nav>

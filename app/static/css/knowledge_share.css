@@ -1,0 +1,137 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.page-title {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #4CAF50;
+}
+
+.page-title .highlight {
+    color: #FFD700;
+}
+
+.knowledge-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #e7e7e7;
+}
+
+.cta-button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #45a049;
+}
+
+.filter-section {
+    display: flex;
+}
+
+.filter-button {
+    background: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.filter-button:hover, .filter-button.active {
+    background: #45a049;
+}
+
+.knowledge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 2rem;
+}
+
+.knowledge-item {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.knowledge-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.item-thumbnail .thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.item-content {
+    padding: 1rem;
+}
+
+.item-content h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.item-content .info {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+.item-content .item-body {
+    margin-bottom: 10px;
+}
+
+.item-content .read-more {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.item-content .read-more:hover {
+    text-decoration: underline;
+}
+
+.item-content .type {
+    font-size: 0.8em;
+    padding: 5px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.knowledge-item[data-type="video"] .type {
+    background: #27ae60;
+}
+
+.knowledge-item[data-type="article"] .type {
+    background: #3498db;
+}
+
+.knowledge-item[data-type="qna"] .type {
+    background: #9b59b6;
+}

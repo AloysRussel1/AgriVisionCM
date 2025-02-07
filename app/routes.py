@@ -1,4 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import login_required, current_user
+from app.model.user_model import User
+from app.model.knowledge_share_model import KnowledgeShare
+from . import db
 
 main = Blueprint('main', __name__)
 
@@ -39,8 +43,29 @@ def events():
     return render_template('events.html', title='Événements')
 
 @main.route('/knowledge')
+@login_required
 def knowledge():
-    return render_template('knowledge.html', title='Partage de Connaissances')
+    knowledge_items = KnowledgeShare.query.order_by(KnowledgeShare.created_at.desc()).all()
+    return render_template('knowledge_share.html', knowledge_items=knowledge_items, title='Partage de Connaissances')
+
+@main.route('/knowledge/add', methods=['GET', 'POST'])
+@login_required
+def add_knowledge():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        type = request.form['type']
+        new_knowledge = KnowledgeShare(title=title, content=content, type=type, user_id=current_user.id)
+        db.session.add(new_knowledge)
+        db.session.commit()
+        return redirect(url_for('main.knowledge'))
+    return render_template('add_knowledge.html', title='Ajouter une Connaissance')
+
+@main.route('/knowledge/')
+@login_required
+def view_knowledge(id):
+    knowledge = KnowledgeShare.query.get_or_404(id)
+    return render_template('view_knowledge.html', knowledge=knowledge, title=f'Détail de la Connaissance')
 
 @main.route('/edit_profile')
 def edit_profile():
@@ -50,12 +75,12 @@ def edit_profile():
 def authentification():
     return render_template('auth.html', title='Authentification')
 
-@main.route('/category/<category>')
+@main.route('/category/')
 def category(category):
     # Logique pour afficher la page de la catégorie spécifiée
     return render_template('category.html', category=category, title=f'Catégorie - {category.capitalize()}')
 
-@main.route('/resource/<resource_id>')
+@main.route('/resource/')
 def resource(resource_id):
     # Logique pour afficher la ressource spécifiée
     return render_template('resource.html', resource_id=resource_id, title=f'Ressource - {resource_id.replace("-", " ").capitalize()}')
