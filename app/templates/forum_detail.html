@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ forum.title }} - Forum{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forums.css') }}">
+    <!-- Assurez-vous que Font Awesome est inclus dans votre base.html ou ici -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="forum-topic">
+    <div class="topic-header">
+        <h1>{{ forum.title }}</h1>
+        <p class="info">Par <span class="author">{{ forum.user.username }}</span> | {{ forum.created_at.strftime('%d/%m/%Y') }}</p>
+    </div>
+    <div class="topic-content">
+        <p>{{ forum.content }}</p>
+    </div>
+    <hr>
+    <div class="comments-section">
+        <h2>Commentaires</h2>
+        {% if forum.comments %}
+            {% for comment in forum.comments %}
+            <div class="comment-card">
+                <p class="comment-info">
+                    Par <span class="author">{{ comment.user.username }}</span> le {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                </p>
+                <p class="comment-text">{{ comment.content }}</p>
+                <!-- Section Réactions -->
+                <div class="comment-reactions">
+                    <a href="#" class="reaction" data-reaction="like"><i class="fa fa-thumbs-up"></i> <span class="reaction-count">12</span></a>
+                    <a href="#" class="reaction" data-reaction="love"><i class="fa fa-heart"></i> <span class="reaction-count">5</span></a>
+                    <a href="#" class="reaction" data-reaction="laugh"><i class="fa fa-smile"></i> <span class="reaction-count">3</span></a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à répondre !</p>
+        {% endif %}
+    </div>
+    <div class="reply-form">
+        <h2>Répondre</h2>
+        <form method="POST" action="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
+            <textarea name="comment" placeholder="Votre commentaire..." required></textarea>
+            <button type="submit" class="cta-button">Envoyer</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

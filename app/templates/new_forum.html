@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Créer un Nouveau Sujet - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forums.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-title">
+    <h1><i class="fas fa-comments"></i> Créer un Nouveau Sujet</h1>
+    <p>Partagez vos idées et échangez avec la communauté.</p>
+</section>
+
+<section class="form-container">
+    <div class="form-card">
+        <h2>📌 Démarrer une nouvelle discussion</h2>
+        <form method="POST" action="{{ url_for('main.new_forum') }}">
+            <div class="form-group">
+                <label for="title"><i class="fas fa-heading"></i> Titre :</label>
+                <input type="text" name="title" id="title" placeholder="Exemple : Comment améliorer la production de maïs ?" required>
+            </div>
+            <div class="form-group">
+                <label for="content"><i class="fas fa-pencil-alt"></i> Contenu :</label>
+                <textarea name="content" id="content" placeholder="Décrivez votre sujet en détail..." required></textarea>
+            </div>
+            <button type="submit" class="cta-button"><i class="fas fa-paper-plane"></i> Publier</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

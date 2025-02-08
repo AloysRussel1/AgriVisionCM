@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Forum - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forums.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Nouvelle En-tête Moderne -->
+<section class="page-header">
+    <div class="header-overlay">
+        <div class="header-content">
+            <h1>Forum AgriVisionCM</h1>
+            <p>Partagez vos idées, échangez vos conseils et faites grandir votre savoir agricole</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contrôles du forum -->
+<section class="forum-controls">
+    <a href="{{ url_for('main.new_forum') }}" class="cta-button">Nouveau Sujet</a>
+    <div class="search-bar">
+        <input type="text" placeholder="Rechercher dans le forum..." />
+        <button type="button" class="search-button">Rechercher</button>
+    </div>
+</section>
+
+<!-- Liste des sujets -->
+<section class="forum-list">
+    <div class="forum-cards">
+        {% if forums|length == 0 %}
+            <p class="no-topics">Aucun sujet n'a encore été créé. Soyez le premier à démarrer une discussion !</p>
+        {% else %}
+            {% for forum in forums %}
+            <div class="forum-card">
+                <h2>
+                    <a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
+                        {{ forum.title }}
+                    </a>
+                </h2>
+                <p class="info">
+                    Par <span class="author">{{ forum.user.username }}</span> | {{ forum.created_at.strftime('%d/%m/%Y') }}
+                </p>
+                <p class="excerpt">{{ forum.content | truncate(150, true) }}</p>
+                <a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}" class="read-more">Voir plus</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

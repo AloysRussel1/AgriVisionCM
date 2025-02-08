@@ -1,7 +1,7 @@
 /* Styles globaux */
 body {
     font-family: 'Arial', sans-serif;
-    background: #f4f4f4;
+    background: #f6f6f6;
     color: #333;
     line-height: 1.6;
 }
@@ -64,36 +64,33 @@ body {
 /* Grille d'affichage des ressources */
 .knowledge-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Réduction de la taille minimale */
-    gap: 20px;
-    padding: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 2rem 4rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Carte individuelle de ressource */
 .knowledge-item {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    border: 1px solid #e0e0e0;
 }
 .knowledge-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Vignette (image) */
-.item-thumbnail .thumbnail {
-    width: 100%;
-    height: 150px; /* Hauteur réduite pour un affichage plus compact */
-    object-fit: cover;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Contenu de la carte */
 .item-content {
-    padding: 1rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -102,6 +99,7 @@ body {
     margin-top: 0;
     color: #2E7D32; /* Vert foncé pour le titre */
     font-size: 1.5rem;
+    font-weight: 600;
 }
 .item-content .info {
     font-size: 0.9em;
@@ -112,6 +110,11 @@ body {
     margin-bottom: 10px;
     font-size: 0.95rem;
     flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 .item-content .read-more {
     color: #FF8C00; /* Orange foncé pour le lien "Lire la suite" */
@@ -132,19 +135,25 @@ body {
     color: #4CAF50; /* Couleur verte du thème */
     text-decoration: none;
     font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 .cta-read:hover {
-    text-decoration: underline;
+    background-color: #4CAF50;
+    color: white;
 }
 
 /* Badge de type */
 .item-content .type {
     font-size: 0.8em;
     padding: 5px 8px;
-    border-radius: 3px;
+    border-radius: 4px;
     color: white;
     display: inline-block;
     text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 10px;
     background: #FF7043; /* Couleur par défaut (une nuance d'orange) */
 }
 /* Couleurs spécifiques par type */

@@ -2,6 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from app.model.user_model import User
 from app.model.knowledge_share_model import KnowledgeShare
+from app.model.resource_model import Resource
+from app.model.comment_model import Comment
+from app.model.forum_model import Forum
 from . import db
 from app.forms import AddKnowledgeForm
 
@@ -40,9 +43,18 @@ def profile():
 def community():
     return render_template('community.html', title='Communauté')
 
-@main.route('/forums')
-def forums():
-    return render_template('forums.html', title='Forums')
+# @main.route('/forums')
+# def forums():
+#     return render_template('forums.html', title='Forums')
+
+# @main.route('/forum/comment', methods=['POST'])
+# def add_comment():
+#     forum = Forum.query.first()  # Assumes there's only one forum
+#     content = request.form['content']
+#     comment = Comment(content=content, forum_id=forum.id, user_id=current_user.id)
+#     db.session.add(comment)
+#     db.session.commit()
+#     return redirect(url_for('main.forum'))
 
 @main.route('/events')
 def events():
@@ -86,6 +98,53 @@ def add_knowledge():
         return redirect(url_for('main.knowledge'))
     
     return render_template('add_knowledge.html', title='Ajouter une Connaissance', form=form)
+
+
+# 1. Affichage de la liste des sujets du forum
+@main.route('/forums')
+@login_required
+def forums():
+    forums = Forum.query.order_by(Forum.created_at.desc()).all()
+    return render_template('forums.html', forums=forums, title="Forum")
+
+# 2. Création d'un nouveau sujet (GET pour afficher le formulaire, POST pour le traiter)
+@main.route('/forums/new', methods=['GET', 'POST'])
+@login_required
+def new_forum():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        if title and content:
+            new_thread = Forum(title=title, content=content, user_id=current_user.id)
+            db.session.add(new_thread)
+            db.session.commit()
+            return redirect(url_for('main.forums'))
+        # Vous pouvez ajouter ici la gestion des erreurs
+    return render_template('new_forum.html', title="Nouveau Sujet")
+
+# 3. Affichage d'un sujet et gestion de l'ajout d'un commentaire
+@main.route('/forums/<int:forum_id>', methods=['GET', 'POST'])
+@login_required
+def forum_detail(forum_id):
+    forum_thread = Forum.query.get_or_404(forum_id)
+    if request.method == 'POST':
+        comment_content = request.form.get('comment')
+        if comment_content:
+            new_comment = Comment(content=comment_content, forum_id=forum_id, user_id=current_user.id)
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for('main.forum_detail', forum_id=forum_id))
+        # Vous pouvez ajouter ici la gestion d'erreurs si le commentaire est vide
+    return render_template('forum_detail.html', forum=forum_thread, title=forum_thread.title)
+
+@main.route('/shared_resources')
+def shared_resources():
+    resources_by_category = {
+        'document': Resource.query.filter_by(type='document').all(),
+        'guide': Resource.query.filter_by(type='guide').all(),
+        'case_study': Resource.query.filter_by(type='case_study').all()
+    }
+    return render_template('shared_resources.html', resources_by_category=resources_by_category)
 
 
 @main.route('/knowledge/')
