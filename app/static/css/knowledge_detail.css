@@ -1,0 +1,86 @@
+
+/* Titre de la page */
+.page-title {
+    text-align: center;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border-radius: 0 0 10px 10px;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-title .info {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Section de contenu */
+.knowledge-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.knowledge-detail .content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+}
+
+/* Section de téléchargement */
+.download-section {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.download-section .cta-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #FF9800;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.download-section .cta-button:hover {
+    background: #e68900;
+}
+
+/* Bouton retour */
+.cta-button {
+    display: block;
+    width: fit-content;
+    margin: 2rem auto;
+    text-align: center;
+    padding: 12px 20px;
+    background: #4CAF50;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #388E3C;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .knowledge-detail {
+        padding: 1.5rem;
+    }
+
+    .page-title h1 {
+        font-size: 2rem;
+    }
+}

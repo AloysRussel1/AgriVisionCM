@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} - AgriVisionCM{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-title">
+    <h1>{{ item.title }}</h1>
+    <p class="info">Par {{ item.user.username }} | {{ item.created_at.strftime('%d/%m/%Y') }}</p>
+</section>
+
+<section class="knowledge-detail">
+    <div class="content">
+        <p>{{ item.content }}</p>
+    </div>
+
+    {% if item.file_path %}
+    <div class="download-section">
+        <a href="{{ url_for('static', filename=item.file_path) }}" class="cta-button" target="_blank">Télécharger</a>
+    </div>
+    {% endif %}
+</section>
+
+<a href="{{ url_for('main.knowledge_share') }}" class="cta-button">Retour</a>
+{% endblock %}

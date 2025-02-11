@@ -1,13 +1,13 @@
-{% extends "base.html" %}
-{% block title %}Partage de Connaissances - AgriVisionCM{% endblock %}
-{% block styles %}
+{% extends "base.html" %} 
+{% block title %}Partage de Connaissances - AgriVisionCM{% endblock %} 
+{% block styles %} 
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_share.css') }}">
-{% endblock %}
-{% block scripts %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_share.css') }}" />
+{% endblock %} 
+{% block scripts %} 
     {{ super() }}
     <script src="{{ url_for('static', filename='js/knowledge_share.js') }}"></script>
-{% endblock %}
+{% endblock %} 
 {% block content %}
 <section class="page-title">
     <h1>Partage de <span class="highlight">Connaissances</span></h1>
@@ -31,18 +31,27 @@
             <h2>{{ item.title }}</h2>
             <p class="info">Par {{ item.user.username }} | {{ item.created_at.strftime('%d/%m/%Y') }}</p>
             <div class="item-body">
-                <p>{{ item.content | truncate(200, true) }}</p>
+                {% if item.type == 'image' and item.file_path %}
+                    <img src="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" alt="Image partagée" class="preview-image">
+                {% elif item.type == 'video' and item.file_path %}
+                    <video controls class="preview-video">
+                        <source src="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" type="video/mp4">
+                    </video>
+                {% else %}
+                    <p>{{ item.content | truncate(200, true) }}</p>
+                {% endif %}
             </div>
             <div class="item-footer">
-                {% if item.type == 'video' %}
-                    <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="cta-read">Lire</a>
+                {% if item.file_path %}
+                    <a href="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" class="cta-read" target="_blank">Télécharger</a>
                 {% else %}
                     <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="cta-read">Lire la suite...</a>
                 {% endif %}
             </div>
         </div>
-      </article>      
-      
+    </article>
+    {% else %}
+    <p>Aucune publication trouvée.</p>
     {% endfor %}
 </section>
 {% endblock %}

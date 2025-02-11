@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for,flash,send_from_directory
 from flask_login import login_required, current_user
 from app.model.user_model import User
 from app.model.knowledge_share_model import KnowledgeShare
@@ -43,18 +43,6 @@ def profile():
 def community():
     return render_template('community.html', title='Communauté')
 
-# @main.route('/forums')
-# def forums():
-#     return render_template('forums.html', title='Forums')
-
-# @main.route('/forum/comment', methods=['POST'])
-# def add_comment():
-#     forum = Forum.query.first()  # Assumes there's only one forum
-#     content = request.form['content']
-#     comment = Comment(content=content, forum_id=forum.id, user_id=current_user.id)
-#     db.session.add(comment)
-#     db.session.commit()
-#     return redirect(url_for('main.forum'))
 
 @main.route('/events')
 def events():
@@ -62,42 +50,68 @@ def events():
 
 @main.route('/knowledge')
 @login_required
-def knowledge():
-    knowledge_items = KnowledgeShare.query.order_by(KnowledgeShare.created_at.desc()).all()
-    return render_template('knowledge_share.html', knowledge_items=knowledge_items, title='Partage de Connaissances')
+def knowledge_share():
+    # Filtrer pour afficher uniquement les publications de l'utilisateur courant
+    knowledge_items = KnowledgeShare.query.filter_by(user_id=current_user.id).order_by(KnowledgeShare.created_at.desc()).all()
 
-@main.route('/knowledge/add', methods=['GET', 'POST'])
+    return render_template('knowledge_share.html', knowledge_items=knowledge_items)
+
+@main.route('/knowledge/<int:id>')
 @login_required
-def add_knowledge():
-    form = AddKnowledgeForm()
-    if form.validate_on_submit():
-        title = form.title.data
-        content = form.content.data
-        type = form.type.data
+def view_knowledge(id):
+    item = KnowledgeShare.query.get_or_404(id)
+    
+    # Vérifier que l'utilisateur courant est le propriétaire de l'élément
+    if item.user_id != current_user.id:
+        return redirect(url_for('main.knowledge_share'))  # Redirection si ce n'est pas sa publication
 
-        # Gestion du fichier uploadé
-        file = form.file_upload.data
-        filename = None
-        if file:
+    return render_template('view_knowledge.html', item=item)
+
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+
+@main.route('/add_knowledge', methods=['GET', 'POST'])
+def add_knowledge():
+    
+    form = AddKnowledgeForm()  # Création du formulaire
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        knowledge_type = request.form.get('type')
+        file = request.files.get('file_upload')
+
+        if not title or not knowledge_type:
+            flash('Le titre et le type sont obligatoires.', 'error')
+            return redirect(url_for('main.add_knowledge'))
+
+        file_path = None
+        if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            file.save(upload_path)
-            # Ici, tu peux décider d'enregistrer le chemin du fichier dans la base de données,
-            # par exemple en ajoutant un champ "file_url" dans ton modèle KnowledgeShare.
-        
-        # Créer l'enregistrement KnowledgeShare
-        new_knowledge = KnowledgeShare(
+            file_path = filename  # On ne stocke que le nom du fichier
+            file.save(file_path)
+        elif file:
+            flash('Type de fichier non autorisé.', 'error')
+            return redirect(url_for('main.add_knowledge'))
+
+        knowledge = KnowledgeShare(
             title=title,
             content=content,
-            type=type,
+            type=knowledge_type,
+            file_path=file_path,
             user_id=current_user.id
-            # Si tu ajoutes un champ pour le fichier, ex: file_url=filename
         )
-        db.session.add(new_knowledge)
+        db.session.add(knowledge)
         db.session.commit()
-        return redirect(url_for('main.knowledge'))
-    
-    return render_template('add_knowledge.html', title='Ajouter une Connaissance', form=form)
+        flash('Connaissance ajoutée avec succès !', 'success')
+        return redirect(url_for('main.knowledge_share'))
+
+    return render_template('add_knowledge.html', form=form)
+
+@main.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 
 # 1. Affichage de la liste des sujets du forum
@@ -147,11 +161,11 @@ def shared_resources():
     return render_template('shared_resources.html', resources_by_category=resources_by_category)
 
 
-@main.route('/knowledge/')
-@login_required
-def view_knowledge(id):
-    knowledge = KnowledgeShare.query.get_or_404(id)
-    return render_template('view_knowledge.html', knowledge=knowledge, title=f'Détail de la Connaissance')
+# @main.route('/knowledge/')
+# @login_required
+# def view_knowledge(id):
+#     knowledge = KnowledgeShare.query.get_or_404(id)
+#     return render_template('view_knowledge.html', knowledge=knowledge, title=f'Détail de la Connaissance')
 
 @main.route('/edit_profile')
 def edit_profile():

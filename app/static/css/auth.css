@@ -210,3 +210,29 @@ body{
 .container.active .toggle-right{
     transform: translateX(200%);
 }
+
+.flash-messages {
+    list-style: none;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 400px;
+    text-align: center;
+}
+
+.flash-message {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: opacity 0.5s ease-out;
+}
+
+.flash-message.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+    color: white;
+}

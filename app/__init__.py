@@ -10,6 +10,9 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    # Charger la configuration correctement
+    app.config.from_object('app.config.Config')
+
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.config['SECRET_KEY'] = '11111'  # Remplissez avec une clé secrète
