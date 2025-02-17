@@ -1,7 +1,15 @@
+/* Styles généraux */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
 
 /* Titre de la page */
 .page-title {
-    text-align: center;
     padding: 2rem 0;
     background: linear-gradient(135deg, #4CAF50, #2E7D32);
     color: white;

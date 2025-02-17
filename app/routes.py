@@ -4,7 +4,10 @@ from app.model.user_model import User
 from app.model.knowledge_share_model import KnowledgeShare
 from app.model.resource_model import Resource
 from app.model.comment_model import Comment
+from app.model.reaction_model import Reaction
 from app.model.forum_model import Forum
+from app import socketio
+from flask_socketio import emit
 from . import db
 from app.forms import AddKnowledgeForm
 
@@ -113,12 +116,14 @@ def add_knowledge():
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
+# ROUTES POUR LE FORUM
 
 # 1. Affichage de la liste des sujets du forum
 @main.route('/forums')
 @login_required
 def forums():
     forums = Forum.query.order_by(Forum.created_at.desc()).all()
+    # On passe la variable "forums" (liste d'objets Forum) au template
     return render_template('forums.html', forums=forums, title="Forum")
 
 # 2. Création d'un nouveau sujet (GET pour afficher le formulaire, POST pour le traiter)
@@ -132,8 +137,10 @@ def new_forum():
             new_thread = Forum(title=title, content=content, user_id=current_user.id)
             db.session.add(new_thread)
             db.session.commit()
+            flash('Sujet créé avec succès', 'success')
             return redirect(url_for('main.forums'))
-        # Vous pouvez ajouter ici la gestion des erreurs
+        else:
+            flash('Le titre et le contenu sont requis.', 'error')
     return render_template('new_forum.html', title="Nouveau Sujet")
 
 # 3. Affichage d'un sujet et gestion de l'ajout d'un commentaire
@@ -141,25 +148,87 @@ def new_forum():
 @login_required
 def forum_detail(forum_id):
     forum_thread = Forum.query.get_or_404(forum_id)
+    
+    # Charger les commentaires depuis la base de données
+    forum_thread.comments_list = Comment.query.filter_by(forum_id=forum_id).all()
+    
     if request.method == 'POST':
         comment_content = request.form.get('comment')
         if comment_content:
             new_comment = Comment(content=comment_content, forum_id=forum_id, user_id=current_user.id)
             db.session.add(new_comment)
             db.session.commit()
+            flash('Commentaire ajouté', 'success')
             return redirect(url_for('main.forum_detail', forum_id=forum_id))
-        # Vous pouvez ajouter ici la gestion d'erreurs si le commentaire est vide
+        else:
+            flash('Le commentaire ne peut pas être vide.', 'error')
+
     return render_template('forum_detail.html', forum=forum_thread, title=forum_thread.title)
 
-@main.route('/shared_resources')
-def shared_resources():
-    resources_by_category = {
-        'document': Resource.query.filter_by(type='document').all(),
-        'guide': Resource.query.filter_by(type='guide').all(),
-        'case_study': Resource.query.filter_by(type='case_study').all()
-    }
-    return render_template('shared_resources.html', resources_by_category=resources_by_category)
+# 4. SocketIO event handler pour l'ajout instantané d'un commentaire
+@socketio.on('new_comment')
+def handle_new_comment(data):
+    forum_id = data.get('forum_id')
+    comment_content = data.get('comment')
+    if not forum_id or not comment_content:
+        return
+    forum = Forum.query.get(forum_id)
+    if forum:
+        new_comment = Comment(content=comment_content, forum_id=forum_id, user_id=current_user.id)
+        db.session.add(new_comment)
+        db.session.commit()
+        emit('comment_added', {
+            'forum_id': forum_id,
+            'comment': {
+                'content': new_comment.content,
+                'username': current_user.username,
+                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M')
+            }
+        }, broadcast=True)
+ 
+                
+@socketio.on('new_reaction')
+def handle_new_reaction(data):
+    forum_id = data.get('forum_id')
+    comment_id = data.get('comment_id')
+    reaction_type = data.get('reaction')
 
+    if not forum_id or not comment_id or not reaction_type:
+        return
+
+    comment = Comment.query.get(comment_id)
+    if comment:
+        existing_reaction = Reaction.query.filter_by(
+            comment_id=comment_id,
+            user_id=current_user.id,
+            reaction_type=reaction_type
+        ).first()
+
+        if existing_reaction:
+            # Si la réaction existe déjà, on la supprime
+            db.session.delete(existing_reaction)
+            db.session.commit()
+            reaction_count = Reaction.query.filter_by(comment_id=comment_id, reaction_type=reaction_type).count()
+            emit('reaction_removed', {
+                'comment_id': comment_id,
+                'reaction_type': reaction_type,
+                'reaction_count': reaction_count
+            }, broadcast=True)
+        else:
+            # Sinon, on l'ajoute
+            new_reaction = Reaction(
+                reaction_type=reaction_type,
+                comment_id=comment_id,
+                user_id=current_user.id
+            )
+            db.session.add(new_reaction)
+            db.session.commit()
+            reaction_count = Reaction.query.filter_by(comment_id=comment_id, reaction_type=reaction_type).count()
+            emit('reaction_added', {
+                'comment_id': comment_id,
+                'reaction_type': reaction_type,
+                'reaction_count': reaction_count
+            }, broadcast=True)
 
 # @main.route('/knowledge/')
 # @login_required

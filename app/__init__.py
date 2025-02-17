@@ -2,14 +2,17 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_socketio import SocketIO  # Ajout de Flask-SocketIO
 import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
+socketio = SocketIO(cors_allowed_origins="*", async_mode="eventlet")
 
 def create_app():
     app = Flask(__name__)
+    
     # Charger la configuration correctement
     app.config.from_object('app.config.Config')
 
@@ -28,6 +31,7 @@ def create_app():
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
+    
 
     from .model.user_model import User  
     from .model.forum_model import Forum
@@ -36,10 +40,12 @@ def create_app():
     from .model.event_model import Event
     from .model.registration_model import Registration
     from .model.knowledge_share_model import KnowledgeShare
-
+    from .model.reaction_model import Reaction
 
     migrate.init_app(app, db)  # Initialise Flask-Migrate
 
+    # Initialisation de SocketIO dans l'application
+    socketio.init_app(app)
     return app
 
 from .model.user_model import User  # Pour load_user

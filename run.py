@@ -1,6 +1,9 @@
-from app import create_app
+from app import create_app, socketio
 
+# Crée l'application Flask
 app = create_app()
 
+# Lance le serveur Flask avec SocketIO pour gérer les événements en temps réel
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Exécuter l'application avec SocketIO (permet d'avoir des événements en temps réel comme les commentaires instantanés)
+    socketio.run(app, host='0.0.0.0', port=5001, debug=True)

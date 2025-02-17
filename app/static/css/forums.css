@@ -1,24 +1,40 @@
 /* ===============================
-   Global & Réglages de Base
+   Variables et Réglages Globaux
 ================================= */
+:root {
+    --vert-principal: #4CAF50;
+    --vert-fonce: #2E7D32;
+    --vert-hover: #45a049;
+    --orange: #FF8C00;
+    --orange-hover: #e67e22;
+    --gris-clair: #f4f4f4;
+    --gris-moyen: #777;
+    --blanc: #ffffff;
+    --boite-ombre: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--gris-clair);
     color: #333;
     margin: 0;
     padding: 0;
 }
 
 /* ===============================
-   Titres & En-tête de Page
+   En-tête & Titres de Page
 ================================= */
-
 .page-header {
     position: relative;
     padding: 4rem 2rem;
     text-align: center;
-    color: #4CAF50;
+    color: var(--vert-principal);
     margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--vert-principal), var(--vert-fonce));
 }
 .page-header .header-overlay {
     position: relative;
@@ -39,8 +55,9 @@ body {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    color: #333;
+    color: #fff;
 }
+
 .page-title {
     text-align: center;
     padding: 2rem 0;
@@ -49,7 +66,7 @@ body {
 .page-title h1 {
     font-size: 2.8rem;
     margin-bottom: 0.5rem;
-    color: #4CAF50; /* Vert principal */
+    color: var(--vert-principal);
 }
 .page-title p {
     font-size: 1.1rem;
@@ -68,8 +85,8 @@ body {
     margin-bottom: 2rem;
 }
 .forum-controls .cta-button {
-    background: #4CAF50;
-    color: #fff;
+    background: var(--vert-principal);
+    color: var(--blanc);
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 5px;
@@ -78,7 +95,7 @@ body {
     margin-bottom: 1rem;
 }
 .forum-controls .cta-button:hover {
-    background: #45a049;
+    background: var(--vert-hover);
 }
 .search-bar {
     display: flex;
@@ -94,8 +111,8 @@ body {
     width: 250px;
 }
 .search-bar .search-button {
-    background: #FF8C00;
-    color: #fff;
+    background: var(--orange);
+    color: var(--blanc);
     border: none;
     padding: 0.8rem 1rem;
     border-radius: 5px;
@@ -103,7 +120,7 @@ body {
     transition: background 0.3s ease;
 }
 .search-bar .search-button:hover {
-    background: #e67e22;
+    background: var(--orange-hover);
 }
 
 /* ===============================
@@ -122,10 +139,10 @@ body {
    Cartes de Sujet
 ================================= */
 .forum-card {
-    background: #fff;
+    background: var(--blanc);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px var(--boite-ombre);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -137,7 +154,7 @@ body {
 .forum-card h2 {
     font-size: 1.6rem;
     margin-bottom: 0.5rem;
-    color: #2E7D32; /* Vert foncé */
+    color: var(--vert-fonce);
 }
 .forum-card h2 a {
     text-decoration: none;
@@ -145,7 +162,7 @@ body {
 }
 .forum-card .info {
     font-size: 0.9rem;
-    color: #777;
+    color: var(--gris-moyen);
     margin-bottom: 0.8rem;
 }
 .forum-card .excerpt {
@@ -155,7 +172,7 @@ body {
 }
 .read-more {
     font-size: 1rem;
-    color: #4CAF50;
+    color: var(--vert-principal);
     text-decoration: none;
     font-weight: bold;
     align-self: flex-end;
@@ -166,27 +183,10 @@ body {
 }
 
 /* ===============================
-   Divers & Liens
-================================= */
-a {
-    color: inherit;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-.no-topics {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #777;
-    padding: 2rem;
-}
-
-/* ===============================
    En-tête du Sujet (Forum Topic)
 ================================= */
 .forum-topic {
-    background: #fff;
+    background: var(--blanc);
     padding: 2rem;
     border-radius: 8px;
     max-width: 800px;
@@ -195,12 +195,12 @@ a:hover {
 }
 .topic-header h1 {
     font-size: 2rem;
-    color: #4CAF50;
+    color: var(--vert-principal);
     margin-bottom: 0.5rem;
 }
 .topic-header .info {
     font-size: 0.9rem;
-    color: #777;
+    color: var(--gris-moyen);
 }
 
 /* ===============================
@@ -221,21 +221,21 @@ a:hover {
 }
 .comments-section h2 {
     font-size: 1.8rem;
-    color: #4CAF50;
+    color: var(--vert-principal);
     margin-bottom: 1rem;
 }
 
 /* Carte de Commentaire */
 .comment-card {
     background: #f9f9f9;
-    border-left: 4px solid #4CAF50;
+    border-left: 4px solid var(--vert-principal);
     padding: 1rem;
     margin-bottom: 1rem;
     border-radius: 4px;
 }
 .comment-card .comment-info {
     font-size: 0.85rem;
-    color: #777;
+    color: var(--gris-moyen);
     margin-bottom: 0.5rem;
 }
 .comment-card .comment-text {
@@ -253,7 +253,7 @@ a:hover {
     margin-top: 0.5rem;
 }
 .comment-reactions .reaction {
-    color: #4CAF50;
+    color: var(--vert-principal);
     text-decoration: none;
     font-size: 1rem;
     display: flex;
@@ -262,7 +262,7 @@ a:hover {
     transition: color 0.3s ease;
 }
 .comment-reactions .reaction:hover {
-    color: #45a049;
+    color: var(--vert-hover);
 }
 .comment-reactions .reaction .reaction-count {
     font-weight: bold;
@@ -272,7 +272,7 @@ a:hover {
    Formulaire de Réponse
 ================================= */
 .reply-form {
-    background: #fff;
+    background: var(--blanc);
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -281,7 +281,7 @@ a:hover {
 }
 .reply-form h2 {
     font-size: 1.8rem;
-    color: #4CAF50;
+    color: var(--vert-principal);
     margin-bottom: 1rem;
 }
 .reply-form textarea {
@@ -295,8 +295,8 @@ a:hover {
     margin-bottom: 1rem;
 }
 .reply-form .cta-button {
-    background: #4CAF50;
-    color: #fff;
+    background: var(--vert-principal);
+    color: var(--blanc);
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
@@ -305,54 +305,22 @@ a:hover {
     transition: background 0.3s ease;
 }
 .reply-form .cta-button:hover {
-    background: #45a049;
+    background: var(--vert-hover);
 }
 
-/* ===============================
-   Liens & Divers
-================================= */
-a {
-    color: inherit;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-.no-comments {
-    font-size: 1rem;
-    color: #777;
-    text-align: center;
-    margin-top: 2rem;
-}
 /* ===============================
    Nouveau Sujet - Formulaire
 ================================= */
-.page-title {
-    text-align: center;
-    padding: 2rem 0;
-}
-.page-title h1 {
-    font-size: 2.2rem;
-    color: #4CAF50;
-}
-.page-title p {
-    font-size: 1rem;
-    color: #666;
-}
-
-/* Conteneur du formulaire */
 .form-container {
     display: flex;
     justify-content: center;
     padding: 2rem;
 }
-
-/* Carte du formulaire */
 .form-card {
-    background: white;
+    background: var(--blanc);
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     max-width: 600px;
     width: 100%;
 }
@@ -361,8 +329,6 @@ a:hover {
     margin-bottom: 1rem;
     color: #333;
 }
-
-/* Champs de formulaire */
 .form-group {
     margin-bottom: 1rem;
 }
@@ -382,15 +348,15 @@ a:hover {
 }
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #4CAF50;
+    border-color: var(--vert-principal);
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
     outline: none;
 }
 
 /* Bouton de soumission */
 .cta-button {
-    background: #4CAF50;
-    color: white;
+    background: var(--vert-principal);
+    color: var(--blanc);
     padding: 12px 20px;
     border: none;
     border-radius: 5px;
@@ -407,12 +373,50 @@ a:hover {
     font-size: 1.2rem;
 }
 .cta-button:hover {
-    background: #45a049;
+    background: var(--vert-hover);
+}
+
+/* ===============================
+   Liens & Divers
+================================= */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.no-topics {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--gris-moyen);
+    padding: 2rem;
+}
+
+/* ===============================
+   Prévisualisation des Médias
+================================= */
+.preview-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.preview-video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .form-card {
         padding: 1.5rem;
+    }
+    .forum-cards {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        padding: 1rem 2rem;
     }
 }
