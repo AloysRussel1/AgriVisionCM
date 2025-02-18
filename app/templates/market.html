@@ -40,8 +40,11 @@
                 </div>
                 <p class="description">{{ product.description[:100] }}...</p>
                 <div class="contact">
-                    <a href="mailto:{{ product.contact }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter le vendeur</a>
+                    <a href="{{ url_for('main.conversation', user_id=product.user.id) }}" class="cta-contact">
+                        <i class="fas fa-envelope"></i> Contacter le vendeur
+                    </a>                    
                 </div>
+                                                            
             </div>
         </div>
         {% else %}

@@ -7,9 +7,9 @@ from app.model.comment_model import Comment
 from app.model.reaction_model import Reaction
 from app.model.forum_model import Forum
 from app.model.product_model import Product
+from app.model.message_model import Message
 from app import socketio
-from flask_socketio import emit
-import uuid 
+from flask_socketio import emit, join_room, leave_room
 from . import db
 from app.forms import AddKnowledgeForm
 
@@ -120,6 +120,53 @@ def add_product():
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+
+
+# Route pour afficher la conversation
+@main.route("/conversation/<int:user_id>")
+@login_required
+def conversation(user_id):
+    seller = User.query.get_or_404(user_id)
+    messages = Message.query.filter_by(
+        sender_id=current_user.id, receiver_id=user_id
+    ).all() + Message.query.filter_by(
+        sender_id=user_id, receiver_id=current_user.id
+    ).all()
+    messages.sort(key=lambda msg: msg.timestamp)  # Trier par date
+
+    return render_template("conversation.html", seller=seller, messages=messages)
+
+
+# SocketIO : Gérer l'envoi des messages en temps réel
+@socketio.on("send_message")
+def handle_send_message(data):
+    sender_id = data["sender_id"]
+    receiver_id = data["receiver_id"]
+    content = data["message"]
+
+    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
+    db.session.add(message)
+    db.session.commit()
+
+    room = f"chat_{min(sender_id, receiver_id)}_{max(sender_id, receiver_id)}"
+    emit("receive_message", {"sender_id": sender_id, "message": content}, room=room)
+
+
+# SocketIO : Rejoindre une salle de discussion
+@socketio.on("join_room")
+def handle_join_room(data):
+    room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
+    join_room(room)
+
+
+# SocketIO : Quitter la salle
+@socketio.on("leave_room")
+def handle_leave_room(data):
+    room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
+    leave_room(room)
+
+
 
 @main.route('/events')
 def events():

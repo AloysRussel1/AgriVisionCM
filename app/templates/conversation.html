@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Chat avec {{ seller.username }}{% endblock %}
+
+{% block styles %}
+{{ super() }}  
+<link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="chat-container">
+    <h2>Discussion avec {{ seller.username }}</h2>
+    <div class="chat-box" id="chat-box">
+        {% for message in messages %}
+            <div class="message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}">
+                <p>{{ message.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Écrire un message...">
+        <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</section>
+
+<script>
+    var socket = io.connect("{{ request.host_url }}");
+
+    socket.emit("join_room", {
+        user1: {{ current_user.id }},
+        user2: {{ seller.id }}
+    });
+
+    document.getElementById("send-btn").addEventListener("click", function () {
+        var messageInput = document.getElementById("message-input");
+        var message = messageInput.value.trim();
+
+        if (message) {
+            socket.emit("send_message", {
+                sender_id: {{ current_user.id }},
+                receiver_id: {{ seller.id }},
+                message: message
+            });
+
+            // Ajouter le message dans la boîte de chat
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class="message sent"><p>${message}</p></div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            messageInput.value = ""; // Effacer l'input après envoi
+        }
+    });
+
+    socket.on("receive_message", function (data) {
+        var chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<div class="message received"><p>${data.message}</p></div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+</script>
+{% endblock %}
