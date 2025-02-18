@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Marché - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}" />
+{% endblock %}
+
+{% block content %}
+<section class="page-title">
+    <h1>Bienvenue sur le <span class="highlight">Marché</span> Agricole</h1>
+    <p>Découvrez les produits agricoles disponibles ou publiez vos propres produits à vendre.</p>
+</section>
+
+<!-- Bouton d'ajout de produit -->
+{% if current_user.is_authenticated %}
+<section class="add-product-button">
+    <a href="{{ url_for('main.add_product') }}" class="cta-button">Ajouter un produit</a>
+</section>
+{% else %}
+<p>Vous devez être connecté pour publier un produit.</p>
+{% endif %}
+
+<!-- Liste des produits disponibles -->
+<section class="products-list">
+    <h2>Produits disponibles</h2>
+    <div class="filters">
+        <input type="text" id="search" placeholder="Rechercher un produit...">
+        <button class="filter-button" data-filter="all">Tous</button>
+        <button class="filter-button" data-filter="city">Par Ville</button>
+        <button class="filter-button" data-filter="price">Par Prix</button>
+    </div>
+
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card" data-city="{{ product.city }}" data-price="{{ product.price }}">
+            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="Image du produit">
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <div class="product-details">
+                    <p><strong>Ville:</strong> {{ product.city }}</p>
+                    <p><strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p> <!-- Affichage de l'unité -->
+                    <p><strong>Quantité:</strong> {{ product.quantity }}</p>
+                </div>
+                <p class="description">{{ product.description[:100] }}...</p>
+                <div class="contact">
+                    <a href="mailto:{{ product.contact }}" class="cta-contact">Contacter le vendeur</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>Aucun produit disponible.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

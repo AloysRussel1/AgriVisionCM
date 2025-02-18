@@ -6,8 +6,10 @@ from app.model.resource_model import Resource
 from app.model.comment_model import Comment
 from app.model.reaction_model import Reaction
 from app.model.forum_model import Forum
+from app.model.product_model import Product
 from app import socketio
 from flask_socketio import emit
+import uuid 
 from . import db
 from app.forms import AddKnowledgeForm
 
@@ -46,6 +48,78 @@ def profile():
 def community():
     return render_template('community.html', title='Communauté')
 
+@main.route('/market', methods=['GET', 'POST'])
+@login_required
+def market():
+    if request.method == 'POST':
+        name = request.form['name']
+        price = request.form['price']
+        city = request.form['city']
+        quantity = request.form['quantity']
+        description = request.form['description']
+        image = request.files['image']
+        
+        # Sauvegarde de l'image
+        image_path = f"static/uploads/{image.filename}"
+        image.save(image_path)
+
+        new_product = Product(
+            name=name, price=price, city=city,
+            quantity=quantity, description=description,
+            image=image_path, user_id=current_user.id
+        )
+        db.session.add(new_product)
+        db.session.commit()
+        
+        flash('Produit ajouté avec succès', 'success')
+        return redirect(url_for('main.market'))
+    
+    products = Product.query.all()
+    return render_template('market.html', products=products)
+
+@main.route('/add_product', methods=['GET', 'POST'])
+@login_required
+def add_product():
+    if request.method == 'POST':
+        name = request.form['name']
+        price = request.form['price']
+        unit = request.form['unit']
+        city = request.form['city']
+        quantity = request.form['quantity']
+        description = request.form['description']
+        image = request.files['image']
+
+        # Vérification du fichier image
+        if image:
+            filename = secure_filename(image.filename)
+            image_path = filename  # Pas besoin de 'uploads' ici, il sera géré par 'static/uploads'
+
+            # Utilisation de current_app pour accéder à la configuration
+            image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], image_path))  # Sauvegarde de l'image dans 'static/uploads'
+
+        else:
+            image_path = None
+
+        # Création du produit et ajout à la base de données
+        new_product = Product(
+            name=name, price=price, city=city,
+            quantity=quantity, description=description,
+            unit=unit,  # Ajouter l'unité ici
+            image=image_path,  # Enregistrement du chemin relatif
+            user_id=current_user.id
+        )
+        db.session.add(new_product)
+        db.session.commit()
+
+        flash('Produit ajouté avec succès', 'success')
+        return redirect(url_for('main.market'))  # Redirection vers la page de listing
+
+    return render_template('add_product.html')
+
+# Fonction pour vérifier si le fichier est autorisé
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 @main.route('/events')
 def events():

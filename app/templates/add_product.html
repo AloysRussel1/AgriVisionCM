@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Ajouter un produit - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}" />
+{% endblock %}
+
+{% block content %}
+<section class="page-title">
+    <h1>Ajouter un nouveau <span class="highlight">Produit</span></h1>
+</section>
+
+<!-- Formulaire d'ajout de produit -->
+<form method="POST" action="{{ url_for('main.add_product') }}" enctype="multipart/form-data" class="product-form">
+    <div class="form-group">
+        <label for="name">Nom du produit</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="price">Prix (FCFA/kg)</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div class="form-group">
+        <label for="unit">Unité</label>
+        <select id="unit" name="unit" required>
+            <option value="kilo">Kilo</option>
+            <option value="sac">Sac</option>
+            <option value="seau">Seau</option>
+            <option value="cagot">Cagot</option>
+            <option value="litre">Litre</option>
+            <option value="pièce">Pièce</option>
+            <option value="tonne">Tonne</option>
+            <option value="autre">Autre</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="city">Ville</label>
+        <input type="text" id="city" name="city" required>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantité disponible</label>
+        <input type="number" id="quantity" name="quantity" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Description (facultatif)</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="image">Image du produit</label>
+        <input type="file" id="image" name="image" required>
+    </div>
+    <div class="form-group">
+        <label for="contact">Contact du vendeur</label>
+        <input type="text" id="contact" name="contact" required>
+    </div>
+    <button type="submit" class="cta-button">Ajouter le produit</button>
+</form>
+{% endblock %}

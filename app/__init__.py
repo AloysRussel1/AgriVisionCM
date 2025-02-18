@@ -41,6 +41,7 @@ def create_app():
     from .model.registration_model import Registration
     from .model.knowledge_share_model import KnowledgeShare
     from .model.reaction_model import Reaction
+    from .model.product_model import Product
 
     migrate.init_app(app, db)  # Initialise Flask-Migrate
 
