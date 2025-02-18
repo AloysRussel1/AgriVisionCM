@@ -28,25 +28,18 @@
 
 <!-- Liste des Sujets -->
 <section class="forum-list">
-    <div class="forum-cards">
-        {% if forums|length == 0 %}
-            <p class="no-topics">Aucun sujet n'a encore été créé. Soyez le premier à démarrer une discussion !</p>
-        {% else %}
-            {% for forum in forums %}
-            <div class="forum-card">
-                <h2>
-                    <a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
-                        {{ forum.title }}
-                    </a>
-                </h2>
-                <p class="info">
-                    Par <span class="author">{{ forum.user.username }}</span> | {{ forum.created_at.strftime('%d/%m/%Y') }}
-                </p>
-                <p class="excerpt">{{ forum.content | truncate(150, true) }}</p>
-                <a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}" class="read-more">Voir plus</a>
+    {% if forums|length == 0 %}
+        <p class="no-topics">Aucun sujet n'a encore été créé. Soyez le premier à démarrer une discussion !</p>
+    {% else %}
+        {% for forum in forums %}
+        <div class="forum-item">
+            <div class="forum-info">
+                <p class="creator">Créé par <span class="author">{{ forum.user.username }}</span></p>
+                <h2><a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}">{{ forum.title }}</a></h2>
+                <p class="excerpt">{{ forum.content | truncate(150, true) }}</p> <!-- Aperçu du contenu -->
             </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+        </div>
+        {% endfor %}
+    {% endif %}
 </section>
 {% endblock %}

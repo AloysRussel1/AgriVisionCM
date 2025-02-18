@@ -4,6 +4,7 @@
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,25 +13,20 @@
     <p>Découvrez les produits agricoles disponibles ou publiez vos propres produits à vendre.</p>
 </section>
 
-<!-- Bouton d'ajout de produit -->
-{% if current_user.is_authenticated %}
-<section class="add-product-button">
-    <a href="{{ url_for('main.add_product') }}" class="cta-button">Ajouter un produit</a>
-</section>
-{% else %}
-<p>Vous devez être connecté pour publier un produit.</p>
-{% endif %}
+<!-- Barre de recherche et filtres -->
+<div class="search-filter-container">
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('main.add_product') }}" class="cta-button add-product">Ajouter un produit</a>
+    {% endif %}
+    <input type="text" id="search" placeholder="Rechercher un produit...">
+    <button class="filter-button" data-filter="all">Tous</button>
+    <button class="filter-button" data-filter="city">Par Ville</button>
+    <button class="filter-button" data-filter="price">Par Prix</button>
+</div>
 
 <!-- Liste des produits disponibles -->
 <section class="products-list">
     <h2>Produits disponibles</h2>
-    <div class="filters">
-        <input type="text" id="search" placeholder="Rechercher un produit...">
-        <button class="filter-button" data-filter="all">Tous</button>
-        <button class="filter-button" data-filter="city">Par Ville</button>
-        <button class="filter-button" data-filter="price">Par Prix</button>
-    </div>
-
     <div class="product-grid">
         {% for product in products %}
         <div class="product-card" data-city="{{ product.city }}" data-price="{{ product.price }}">
@@ -38,13 +34,13 @@
             <div class="product-info">
                 <h3>{{ product.name }}</h3>
                 <div class="product-details">
-                    <p><strong>Ville:</strong> {{ product.city }}</p>
-                    <p><strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p> <!-- Affichage de l'unité -->
-                    <p><strong>Quantité:</strong> {{ product.quantity }}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Ville:</strong> {{ product.city }}</p>
+                    <p><i class="fas fa-tag"></i> <strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
+                    <p><i class="fas fa-box"></i> <strong>Quantité:</strong> {{ product.quantity }} {{ product.unit }}</p>
                 </div>
                 <p class="description">{{ product.description[:100] }}...</p>
                 <div class="contact">
-                    <a href="mailto:{{ product.contact }}" class="cta-contact">Contacter le vendeur</a>
+                    <a href="mailto:{{ product.contact }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter le vendeur</a>
                 </div>
             </div>
         </div>

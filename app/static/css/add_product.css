@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* En-tête de la page */
+.page-title {
+    text-align: center;
+    /* padding: 20px 0; */
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+}
+
+.page-title .highlight {
+    color: #FF8C00;
+}
+
+/* Formulaire */
+.product-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fafafa;
+    transition: border 0.3s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #FF8C00;
+    outline: none;
+}
+
+/* Bouton d'ajout */
+.cta-button {
+    width: 100%;
+    background: #FF8C00;
+    color: white;
+    padding: 12px;
+    border: none;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+.cta-button:hover {
+    background: #e67e00;
+}

@@ -3,7 +3,7 @@
 
 {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/forums.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forum_detail.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
@@ -13,43 +13,47 @@
         <h1>{{ forum.title }}</h1>
         <p class="info">Par <span class="author">{{ forum.user.username }}</span> | {{ forum.created_at.strftime('%d/%m/%Y') }}</p>
     </div>
+    
     <div class="topic-content">
-        <p>{{ forum.content }}</p>
-    </div>
-    <hr>
-    <div class="comments-section">
-        <h2>Commentaires</h2>
-        {% if forum.comments|length > 0 %}
-            {% for comment in forum.comments %}
-            <div class="comment-card">
-                <p class="comment-info">
-                    Par <span class="author">{{ comment.user.username }}</span> le {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
-                </p>
-                <p class="comment-text">{{ comment.content }}</p>
-                <!-- Réactions dynamiques -->
-                <div class="comment-reactions">
-                    <a href="#" class="reaction" data-reaction="like" data-comment-id="{{ comment.id }}">
-                        <i class="fa fa-thumbs-up"></i> <span class="reaction-count" id="like-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "like") | list | length }}</span>
-                    </a>
-                    <a href="#" class="reaction" data-reaction="love" data-comment-id="{{ comment.id }}">
-                        <i class="fa fa-heart"></i> <span class="reaction-count" id="love-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "love") | list | length }}</span>
-                    </a>
-                    <a href="#" class="reaction" data-reaction="laugh" data-comment-id="{{ comment.id }}">
-                        <i class="fa fa-smile"></i> <span class="reaction-count" id="laugh-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "laugh") | list | length }}</span>
-                    </a>
-                </div>
+        <div class="topic-left">
+            <div class="content-body">
+                <p>{{ forum.content }}</p>
             </div>
-            {% endfor %}
-        {% else %}
-            <p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à répondre !</p>
-        {% endif %}
-    </div>
-    <div class="reply-form">
-        <h2>Répondre</h2>
-        <form id="new-comment-form" method="POST" action="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
-            <textarea name="comment" placeholder="Votre commentaire..." required></textarea>
-            <button type="submit" class="cta-button">Envoyer</button>
-        </form>
+            <div class="comments-section">
+                <h2>Commentaires</h2>
+                {% if forum.comments|length > 0 %}
+                    {% for comment in forum.comments %}
+                        <div class="comment-card">
+                            <p class="comment-info">
+                                Par <span class="author">{{ comment.user.username }}</span> le {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                            </p>
+                            <p class="comment-text">{{ comment.content }}</p>
+                            <div class="comment-reactions">
+                                <a href="#" class="reaction" data-reaction="like" data-comment-id="{{ comment.id }}">
+                                    <i class="fa fa-thumbs-up"></i> <span class="reaction-count" id="like-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "like") | list | length }}</span>
+                                </a>
+                                <a href="#" class="reaction" data-reaction="love" data-comment-id="{{ comment.id }}">
+                                    <i class="fa fa-heart"></i> <span class="reaction-count" id="love-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "love") | list | length }}</span>
+                                </a>
+                                <a href="#" class="reaction" data-reaction="laugh" data-comment-id="{{ comment.id }}">
+                                    <i class="fa fa-smile"></i> <span class="reaction-count" id="laugh-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "laugh") | list | length }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à répondre !</p>
+                {% endif %}
+            </div>
+
+            <div class="reply-form">
+                <h2>Répondre</h2>
+                <form id="new-comment-form" method="POST" action="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
+                    <textarea name="comment" placeholder="Votre commentaire..." required></textarea>
+                    <button type="submit" class="cta-button">Envoyer</button>
+                </form>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}

@@ -75,7 +75,7 @@
 
 .user-info {
     display: flex;
-    justify-content: center;
+    padding: 15px;
     align-items: center;
     gap: 10px;
     position: relative;
