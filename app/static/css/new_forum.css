@@ -1,32 +1,54 @@
 /* ===============================
-   Nouveau Sujet - Formulaire
+   Page de création de sujet
 ================================= */
+.page-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-title p {
+    font-size: 1.1rem;
+    color: var(--gris-moyen);
+}
+
 .form-container {
     display: flex;
     justify-content: center;
     padding: 2rem;
 }
+
 .form-card {
     background: var(--blanc);
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
 }
+
 .form-card h2 {
     text-align: center;
     margin-bottom: 1rem;
     color: #333;
 }
+
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
+
 .form-group label {
     font-weight: bold;
     display: block;
     margin-bottom: 5px;
 }
+
 .form-group input,
 .form-group textarea {
     width: 100%;
@@ -36,6 +58,7 @@
     font-size: 1rem;
     transition: all 0.3s ease-in-out;
 }
+
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--vert-principal);
@@ -43,7 +66,7 @@
     outline: none;
 }
 
-/* Bouton de soumission */
+/* Style du bouton de soumission */
 .cta-button {
     background: var(--vert-principal);
     color: var(--blanc);
@@ -59,28 +82,13 @@
     gap: 8px;
     width: 100%;
 }
+
 .cta-button i {
     font-size: 1.2rem;
 }
+
 .cta-button:hover {
     background: var(--vert-hover);
-}
-
-/* ===============================
-   Liens & Divers
-================================= */
-a {
-    color: inherit;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-.no-topics {
-    text-align: center;
-    font-size: 1.1rem;
-    color: var(--gris-moyen);
-    padding: 2rem;
 }
 
 /* ===============================
@@ -99,14 +107,9 @@ a:hover {
     margin-top: 10px;
 }
 
-/* Responsive */
+/* Responsivité */
 @media (max-width: 768px) {
     .form-card {
         padding: 1.5rem;
-    }
-    .forum-cards {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 15px;
-        padding: 1rem 2rem;
     }
 }

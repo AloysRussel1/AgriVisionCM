@@ -3,6 +3,8 @@
 
 {% block styles %}
     {{ super() }}
+    <!-- Intégration de Quill.js via CDN -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/new_forum.css') }}">
 {% endblock %}
 
@@ -20,12 +22,39 @@
                 <label for="title"><i class="fas fa-heading"></i> Titre :</label>
                 <input type="text" name="title" id="title" placeholder="Exemple : Comment améliorer la production de maïs ?" required>
             </div>
+
             <div class="form-group">
                 <label for="content"><i class="fas fa-pencil-alt"></i> Contenu :</label>
-                <textarea name="content" id="content" placeholder="Décrivez votre sujet en détail..." required></textarea>
+                <div id="content" style="height: 300px;"></div>
+                <input type="hidden" name="content" id="content-input" required>
             </div>
+
             <button type="submit" class="cta-button"><i class="fas fa-paper-plane"></i> Publier</button>
         </form>
     </div>
 </section>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+    // Initialisation de l'éditeur Quill
+    var quill = new Quill('#content', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['bold', 'italic', 'underline'],
+                ['link'],
+                [{ 'align': [] }],
+                ['image']
+            ]
+        }
+    });
+
+    // Préparer le contenu pour l'envoi dans le formulaire
+    document.querySelector('form').onsubmit = function() {
+        var content = document.querySelector('#content-input');
+        content.value = quill.root.innerHTML;
+    };
+</script>
 {% endblock %}
