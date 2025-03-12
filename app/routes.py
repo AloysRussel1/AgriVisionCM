@@ -12,6 +12,7 @@ from app import socketio
 from flask_socketio import emit, join_room, leave_room
 from . import db
 from app.forms import AddKnowledgeForm
+from app.forms import EditProfileForm
 
 import os
 from flask import current_app
@@ -41,8 +42,47 @@ def about():
     return render_template('about.html', title='À Propos')
 
 @main.route('/profile')
+@login_required  # Assure que seul un utilisateur connecté peut accéder à cette page
 def profile():
-    return render_template('profile.html', title='Profil')
+    user_data = {
+        'username': current_user.username,
+        'email': current_user.email,
+        'joined_date': current_user.joined_date.strftime('%Y-%m-%d') if hasattr(current_user, 'joined_date') else 'Non spécifié',
+        # Ajoutez d'autres champs si vous les ajoutez au modèle User
+    }
+    return render_template('profile.html', title='Profil', user=user_data)
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    
+    if form.validate_on_submit():
+        existing_user = User.query.filter(
+            (User.username == form.username.data) & (User.id != current_user.id)
+        ).first()
+        existing_email = User.query.filter(
+            (User.email == form.email.data) & (User.id != current_user.id)
+        ).first()
+
+        if existing_user:
+            flash('Ce nom d’utilisateur est déjà pris.', 'error')
+            return render_template('edit_profile.html', title='Modifier le Profil', form=form)
+        if existing_email:
+            flash('Cet email est déjà utilisé.', 'error')
+            return render_template('edit_profile.html', title='Modifier le Profil', form=form)
+
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Votre profil a été mis à jour avec succès !', 'success')
+        return redirect(url_for('main.profile'))
+
+    if request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    return render_template('edit_profile.html', title='Modifier le Profil', form=form)
 
 @main.route('/community')
 def community():
@@ -128,29 +168,43 @@ def allowed_file(filename):
 @login_required
 def conversation(user_id):
     seller = User.query.get_or_404(user_id)
-    messages = Message.query.filter_by(
-        sender_id=current_user.id, receiver_id=user_id
-    ).all() + Message.query.filter_by(
-        sender_id=user_id, receiver_id=current_user.id
+    
+    # Récupérer les messages entre les deux utilisateurs et les trier par date
+    messages = Message.query.filter(
+        (Message.sender_id == current_user.id) & (Message.receiver_id == user_id)
+    ).all() + Message.query.filter(
+        (Message.sender_id == user_id) & (Message.receiver_id == current_user.id)
     ).all()
-    messages.sort(key=lambda msg: msg.timestamp)  # Trier par date
+
+    messages.sort(key=lambda msg: msg.timestamp)  
 
     return render_template("conversation.html", seller=seller, messages=messages)
-
 
 # SocketIO : Gérer l'envoi des messages en temps réel
 @socketio.on("send_message")
 def handle_send_message(data):
-    sender_id = data["sender_id"]
-    receiver_id = data["receiver_id"]
-    content = data["message"]
+    print("📩 Message reçu côté serveur :", data)  # Debug
+    
+    sender_id = data.get("sender_id")
+    receiver_id = data.get("receiver_id")
+    content = data.get("message")
+
+    if not sender_id or not receiver_id or not content:
+        print("⚠️ Erreur: Données invalides reçues.")
+        return
+
+    print(f"💾 Enregistrement du message : {content} de {sender_id} vers {receiver_id}")
 
     message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
     db.session.add(message)
     db.session.commit()
 
     room = f"chat_{min(sender_id, receiver_id)}_{max(sender_id, receiver_id)}"
-    emit("receive_message", {"sender_id": sender_id, "message": content}, room=room)
+    emit("receive_message", {
+        "sender_id": sender_id,
+        "receiver_id": receiver_id,
+        "message": content
+    }, room=room)
 
 
 # SocketIO : Rejoindre une salle de discussion
@@ -158,14 +212,14 @@ def handle_send_message(data):
 def handle_join_room(data):
     room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
     join_room(room)
-
+    print(f"Utilisateur {data['user1']} a rejoint la salle {room}")
 
 # SocketIO : Quitter la salle
 @socketio.on("leave_room")
 def handle_leave_room(data):
     room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
     leave_room(room)
-
+    print(f"Utilisateur {data['user1']} a quitté la salle {room}")
 
 
 @main.route('/events')
@@ -357,9 +411,6 @@ def handle_new_reaction(data):
 #     knowledge = KnowledgeShare.query.get_or_404(id)
 #     return render_template('view_knowledge.html', knowledge=knowledge, title=f'Détail de la Connaissance')
 
-@main.route('/edit_profile')
-def edit_profile():
-    return render_template('edit_profile.html', title='Editer votre profil')
 
 @main.route('/auth')
 def authentification():

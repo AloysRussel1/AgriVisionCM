@@ -1,5 +1,12 @@
 <!-- app/templates/components/hero.html -->
 <section class="hero">
+    <div class="hero-background">
+        <div class="wave-layer wave-1"></div>
+        <div class="wave-layer wave-2"></div>
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+    </div>
     <div class="hero-content">
         <div class="header-elements">
             <input type="search" class="search-bar" placeholder="Rechercher...">
@@ -11,5 +18,4 @@
             <a href="{{ url_for('main.predict') }}" class="cta-button try">Essayer Maintenant</a>
         </div>
     </div>
-
 </section>

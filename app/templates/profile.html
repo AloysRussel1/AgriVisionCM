@@ -6,57 +6,32 @@
     {% block styles %}
         {{ super() }}  
         <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     {% endblock %}
 </head>
 <body>
     {% block content %}
-    {% set current_user = {
-        'username': 'AloysRussel',
-        'photo': 'user.png',
-        'full_name': 'Aloys Russel',
-        'email': 'aloyrussel@example.com',
-        'location': 'Yaoundé, Cameroun',
-        'joined_date': '2023-01-01',
-        'stats': {
-            'posts': 45,
-            'comments': 120,
-            'followers': 300,
-            'following': 150
-        },
-        'badges': ['Top Contributor', 'Innovator']
-    } %}
     <section class="profile-header">
-        <style>
-            .profile-header::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 10px,
-                    rgba(46, 139, 87, 0.1) 10px,
-                    rgba(46, 139, 87, 0.1) 20px
-                );
-            }
-        </style>
+        <div class="profile-background">
+            <div class="bg-pattern"></div>
+            <div class="bg-particle particle-1"></div>
+            <div class="bg-particle particle-2"></div>
+            <div class="bg-particle particle-3"></div>
+        </div>
         <div class="profile-avatar">
-            {% if current_user.photo %}
-                <img src="{{ url_for('static', filename='img/' + current_user.photo) }}">
+            {% if user.photo %}
+                <img src="{{ url_for('static', filename='img/' + user.photo) }}" alt="Photo de profil">
             {% else %}
-                <div class="no-avatar">{{ current_user.username[0].upper() }}</div>
+                <div class="no-avatar">{{ user.username[0].upper() }}</div>
             {% endif %}
         </div>
         <div class="profile-info">
-            <h1>{{ current_user.username }}</h1>
+            <h1>{{ user.username }}</h1>
             <p class="bio">Passionné par l'innovation agricole</p>
             <div class="profile-stats">
-                <span><i class="fas fa-comment"></i> {{ current_user.stats.posts }} Posts</span>
-                <span><i class="fas fa-user-friends"></i> {{ current_user.stats.followers }} Followers</span>
-                <span><i class="fas fa-users"></i> {{ current_user.stats.following }} Following</span>
+                <span><i class="fas fa-comment"></i> {{ user.stats.posts if user.stats else 0 }} Posts</span>
+                <span><i class="fas fa-user-friends"></i> {{ user.stats.followers if user.stats else 0 }} Followers</span>
+                <span><i class="fas fa-users"></i> {{ user.stats.following if user.stats else 0 }} Following</span>
             </div>
             <div class="profile-actions">
                 <a href="{{ url_for('main.edit_profile') }}" class="btn edit-profile">Modifier le profil</a>
@@ -69,24 +44,28 @@
         <h2>Informations</h2>
         <div class="info-item">
             <label>Nom:</label>
-            <span>{{ current_user.full_name or "Non spécifié" }}</span>
+            <span>{{ user.full_name or "Non spécifié" }}</span>
         </div>
         <div class="info-item">
             <label>Email:</label>
-            <span>{{ current_user.email or "Non spécifié" }}</span>
+            <span>{{ user.email or "Non spécifié" }}</span>
         </div>
         <div class="info-item">
             <label>Localisation:</label>
-            <span>{{ current_user.location or "Non spécifié" }}</span>
+            <span>{{ user.location or "Non spécifié" }}</span>
         </div>
         <div class="info-item">
             <label>Membre depuis:</label>
-            <span>{{ current_user.joined_date }}</span>
+            <span>{{ user.joined_date }}</span>
         </div>
         <div class="badges">
-            {% for badge in current_user.badges %}
-            <span class="badge">{{ badge }}</span>
-            {% endfor %}
+            {% if user.badges %}
+                {% for badge in user.badges %}
+                    <span class="badge">{{ badge }}</span>
+                {% endfor %}
+            {% else %}
+                <span class="badge">Aucun badge</span>
+            {% endif %}
         </div>
     </section>
 

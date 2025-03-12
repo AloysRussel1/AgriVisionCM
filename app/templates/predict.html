@@ -10,52 +10,94 @@
 </head>
 <body>
     {% block content %}
-    <section class="predict-hero">
-        <h1>Prédiction des Prix par IA</h1>
-        <p>Utilisez notre intelligence artificielle pour prévoir les fluctuations de prix.</p>
-    </section>
-
-    <section class="prediction-form">
-        <h2>Prédisez avec notre IA</h2>
-        <form id="prediction-form">
-            <div class="form-group">
-                <label for="product">Produit</label>
-                <input type="text" id="product" name="product" placeholder="Entrez le nom du produit" required>
+    <section class="ai-orbit">
+        <div class="orbit-container">
+            <div class="orbit-core">
+                <h1>AgriVision IA</h1>
+                <p>Prédictions précises pour l'agriculture de demain.</p>
+                <a href="#prediction-interface" class="start-button">Commencer</a>
             </div>
-            <div class="form-group">
-                <label for="region">Région</label>
-                <select id="region" name="region" required>
-                    <option value="">Sélectionnez une région</option>
-                    <option value="Centre">Centre</option>
-                    <option value="Littoral">Littoral</option>
-                    <!-- Ajoutez d'autres options selon vos régions -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required>
-            </div>
-            <button type="submit" class="cta-button">Prédire</button>
-        </form>
-        <div id="loading-indicator" class="hidden">Chargement...</div>
-    </section>
-
-    <section class="prediction-results" id="results" style="display: none;">
-        <h2>Résultats de la Prédiction</h2>
-        <div id="prediction-chart"></div>
-        <div id="prediction-details">
-            <p><strong>Prix Prédit:</strong> <span id="predicted-price"></span></p>
-            <p><strong>Confiance:</strong> <span id="confidence-level"></span></p>
-            <p><strong>Facteurs Clés:</strong> <span id="key-factors"></span></p>
+            <div class="orbit-ring ring-1"></div>
+            <div class="orbit-ring ring-2"></div>
+            <div class="orbit-ring ring-3"></div>
+            <div class="orbit-particle particle-1"></div>
+            <div class="orbit-particle particle-2"></div>
+            <div class="orbit-particle particle-3"></div>
+            <div class="vector-line line-1"></div>
+            <div class="vector-line line-2"></div>
+            <div class="vector-line line-3"></div>
+            <div class="geometric-shape shape-1"></div>
+            <div class="geometric-shape shape-2"></div>
         </div>
     </section>
 
-    <section class="prediction-insights" id="insights" style="display: none;">
-        <h2>Insights et Recommandations</h2>
-        <p>Voici quelques recommandations basées sur votre prédiction:</p>
-        <ul id="recommendations">
-            <!-- Les recommandations seront ajoutées ici dynamiquement -->
-        </ul>
+    <section class="prediction-interface" id="prediction-interface">
+        <div class="interface-container">
+            <h2>Interface de Prédiction</h2>
+            <form id="prediction-form" class="ai-form">
+                <div class="input-cluster">
+                    <div class="form-node">
+                        <label for="product">Produit</label>
+                        <select id="product" name="product" required>
+                            <option value="">Choisissez un produit</option>
+                        </select>
+                        <small>Ou <a href="#" id="manual-entry">saisie manuelle</a></small>
+                        <input type="text" id="manual-product" name="manual-product" placeholder="Nom du produit" class="hidden">
+                    </div>
+                    <div class="form-node">
+                        <label for="region">Région</label>
+                        <select id="region" name="region" required>
+                            <option value="">Choisissez une région</option>
+                            <option value="Adamaoua">Adamaoua</option>
+                            <option value="Centre">Centre</option>
+                            <option value="Est">Est</option>
+                            <option value="Extrême-Nord">Extrême-Nord</option>
+                            <option value="Littoral">Littoral</option>
+                            <option value="Nord">Nord</option>
+                            <option value="Nord-Ouest">Nord-Ouest</option>
+                            <option value="Ouest">Ouest</option>
+                            <option value="Sud">Sud</option>
+                            <option value="Sud-Ouest">Sud-Ouest</option>
+                        </select>
+                    </div>
+                    <div class="form-node">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                </div>
+                <button type="submit" class="ai-button">Lancer l'Analyse IA</button>
+            </form>
+            <div id="loading-indicator" class="hidden">
+                <div class="ai-loader"></div>
+                <p>Calculs IA en cours...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="ai-results" id="results" style="display: none;">
+        <h2>Résultats IA</h2>
+        <div class="results-grid">
+            <div class="result-card">
+                <p><strong>Prix Prédit</strong></p>
+                <span id="predicted-price"></span>
+            </div>
+            <div class="result-card">
+                <p><strong>Confiance</strong></p>
+                <span id="confidence-level"></span>
+            </div>
+            <div class="result-card">
+                <p><strong>Facteurs Clés</strong></p>
+                <span id="key-factors"></span>
+            </div>
+        </div>
+        <div id="prediction-chart" class="chart-container"></div>
+    </section>
+
+    <section class="ai-insights" id="insights" style="display: none;">
+        <h2>Insights IA</h2>
+        <div class="insights-flow">
+            <ul id="recommendations"></ul>
+        </div>
     </section>
     {% endblock %}
 

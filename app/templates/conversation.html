@@ -24,36 +24,8 @@
 </section>
 
 <script>
-    var socket = io.connect("{{ request.host_url }}");
-
-    socket.emit("join_room", {
-        user1: {{ current_user.id }},
-        user2: {{ seller.id }}
-    });
-
-    document.getElementById("send-btn").addEventListener("click", function () {
-        var messageInput = document.getElementById("message-input");
-        var message = messageInput.value.trim();
-
-        if (message) {
-            socket.emit("send_message", {
-                sender_id: {{ current_user.id }},
-                receiver_id: {{ seller.id }},
-                message: message
-            });
-
-            // Ajouter le message dans la boîte de chat
-            var chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML += `<div class="message sent"><p>${message}</p></div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-            messageInput.value = ""; // Effacer l'input après envoi
-        }
-    });
-
-    socket.on("receive_message", function (data) {
-        var chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML += `<div class="message received"><p>${data.message}</p></div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
+    var currentUserId = {{ current_user.id }};
+    var sellerId = {{ seller.id }};
 </script>
+<script src="{{ url_for('static', filename='js/conversation.js') }}"></script>
 {% endblock %}
