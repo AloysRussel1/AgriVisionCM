@@ -69,13 +69,13 @@
             </form>
             <div id="loading-indicator" class="hidden">
                 <div class="ai-loader"></div>
-                <p>Calculs IA en cours...</p>
+                <p>Analyse IA en cours...</p>
             </div>
         </div>
     </section>
 
     <section class="ai-results" id="results" style="display: none;">
-        <h2>Résultats IA</h2>
+        <h2>Résultats de l'Analyse</h2>
         <div class="results-grid">
             <div class="result-card">
                 <p><strong>Prix Prédit</strong></p>
@@ -90,13 +90,14 @@
                 <span id="key-factors"></span>
             </div>
         </div>
-        <div id="prediction-chart" class="chart-container"></div>
     </section>
 
     <section class="ai-insights" id="insights" style="display: none;">
-        <h2>Insights IA</h2>
+        <h2>Interprétation IA</h2>
         <div class="insights-flow">
-            <ul id="recommendations"></ul>
+            <p id="interpretation" class="interpretation-text"></p>
+            <h3>Recommandations</h3>
+            <ul id="recommendations"></ul>  <!-- Ajouté ici -->
         </div>
     </section>
     {% endblock %}

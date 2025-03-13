@@ -15,6 +15,11 @@ from app.forms import AddKnowledgeForm
 from app.forms import EditProfileForm
 import os
 
+from flask import jsonify, request
+import random
+import requests
+
+
 from datetime import date  
 from flask import current_app
 from werkzeug.utils import secure_filename
@@ -260,47 +265,100 @@ def add_knowledge():
     return render_template('add_knowledge.html', form=form)
 
 # Forum
-@main.route('/forums')
+@main.route('/predict_price', methods=['POST'])
 @login_required
-def forums():
-    forums = Forum.query.order_by(Forum.created_at.desc()).all()
-    return render_template('forums.html', forums=forums, title="Forum")
+def predict_price():
+    data = request.get_json()
+    product = data['product']
+    region = data['region']
+    date = data['date']
 
-@main.route('/forums/new', methods=['GET', 'POST'])
-@login_required
-def new_forum():
-    if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
-        if title and content:
-            new_thread = Forum(title=title, content=content, user_id=current_user.id)
-            db.session.add(new_thread)
-            db.session.commit()
-            flash('Sujet créé avec succès', 'success')
-            return redirect(url_for('main.forums'))
+    # Simulation de prédiction
+    simulated_prediction = {
+        'price': random.randint(1000, 11000),
+        'confidence': round(random.uniform(0.7, 1.0), 2),
+        'factors': ['Demande saisonnière', 'Conditions météo', 'Offre locale']
+    }
+
+    # Prompt pour Hugging Face
+    prompt = f"""
+        Vous êtes un expert en agriculture et en analyse de données. Voici une prédiction de prix pour un produit agricole :
+        - Produit : {product}
+        - Région : {region}
+        - Date : {date}
+        - Prix prédit : {simulated_prediction['price']} XAF
+        - Niveau de confiance : {simulated_prediction['confidence'] * 100}%
+        - Facteurs clés : {', '.join(simulated_prediction['factors'])}
+
+        Fournissez une interprétation détaillée de cette prédiction, expliquez ce que cela signifie pour un agriculteur ou un vendeur, et donnez 3 recommandations spécifiques basées sur ces données.
+    """
+
+    try:
+        # Log du token pour vérification
+        token = current_app.config['HUGGINGFACE_API_TOKEN']
+        print(f"Token envoyé : {token}")
+
+        # Appel à l'API Hugging Face
+        response = requests.post(
+            "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "inputs": prompt,
+                "parameters": {
+                    "max_new_tokens": 500,
+                    "temperature": 0.7,
+                    "top_p": 0.9,
+                    "do_sample": True
+                }
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Erreur Hugging Face - Code: {response.status_code}, Réponse: {response.text}")
+            return jsonify({'error': f'Erreur lors de l’analyse Hugging Face : {response.text}'}), 500
+
+        result = response.json()
+        print(f"Réponse brute Hugging Face : {result}")
+
+        # Extraire le texte généré
+        interpretation_text = result[0]['generated_text'].strip()
+
+        # Supprimer le prompt de la réponse
+        if interpretation_text.startswith(prompt):
+            interpretation_text = interpretation_text[len(prompt):].strip()
         else:
-            flash('Le titre et le contenu sont requis.', 'error')
-    return render_template('new_forum.html', title="Nouveau Sujet")
+            # Si le prompt n'est pas au début, on suppose que tout est la réponse utile
+            interpretation_text = interpretation_text.strip()
 
-@main.route('/forums/<int:forum_id>', methods=['GET', 'POST'])
-@login_required
-def forum_detail(forum_id):
-    forum_thread = Forum.query.get_or_404(forum_id)
-    forum_thread.comments_list = Comment.query.filter_by(forum_id=forum_id).all()
+        # Séparer l'interprétation et les recommandations
+        # On suppose que l'interprétation est le premier paragraphe, suivi des recommandations
+        sections = interpretation_text.split('\n\n')
+        if len(sections) >= 1:
+            interpretation = sections[0].strip()
+            recommendations = sections[1:] if len(sections) > 1 else []
+        else:
+            interpretation = "Aucune interprétation fournie."
+            recommendations = []
+
+        # Log pour vérification
+        print(f"Interprétation extraite : {interpretation}")
+        print(f"Recommandations extraites : {recommendations}")
+
+        return jsonify({
+            'price': simulated_prediction['price'],
+            'confidence': simulated_prediction['confidence'] * 100,
+            'factors': simulated_prediction['factors'],
+            'interpretation': interpretation,
+            'recommendations': recommendations
+        })
+
+    except Exception as e:
+        print(f"Exception dans predict_price: {str(e)}")
+        return jsonify({'error': f'Erreur serveur : {str(e)}'}), 500
     
-    if request.method == 'POST':
-        comment_content = request.form.get('comment')
-        if comment_content:
-            new_comment = Comment(content=comment_content, forum_id=forum_id, user_id=current_user.id)
-            db.session.add(new_comment)
-            db.session.commit()
-            flash('Commentaire ajouté', 'success')
-            return redirect(url_for('main.forum_detail', forum_id=forum_id))
-        else:
-            flash('Le commentaire ne peut pas être vide.', 'error')
-
-    return render_template('forum_detail.html', forum=forum_thread, title=forum_thread.title)
-
 # Routes Dynamiques
 @main.route('/category/')
 def category(category):
