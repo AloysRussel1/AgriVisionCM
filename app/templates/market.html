@@ -16,7 +16,8 @@
 <!-- Barre de recherche et filtres -->
 <div class="search-filter-container">
     {% if current_user.is_authenticated %}
-    <a href="{{ url_for('main.add_product') }}" class="cta-button add-product">Ajouter un produit</a>
+    <a href="{{ url_for('main.add_product') }}" class="cta-button add-product"><i class="fas fa-plus"></i> Ajouter</a>
+    <a href="{{ url_for('main.chat_history') }}" class="cta-button chat-history"><i class="fas fa-comments"></i> Discussions</a>
     {% endif %}
     <input type="text" id="search" placeholder="Rechercher un produit...">
     <button class="filter-button" data-filter="all">Tous</button>
@@ -35,16 +36,14 @@
                 <h3>{{ product.name }}</h3>
                 <div class="product-details">
                     <p><i class="fas fa-map-marker-alt"></i> <strong>Ville:</strong> {{ product.city }}</p>
-                    <p><i class="fas fa-tag"></i> <strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
+                    <p><i class="fas fa-tag"></i> <strong>PrixOid:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
                     <p><i class="fas fa-box"></i> <strong>Quantité:</strong> {{ product.quantity }} {{ product.unit }}</p>
                 </div>
                 <p class="description">{{ product.description[:100] }}...</p>
+
                 <div class="contact">
-                    <a href="{{ url_for('main.conversation', user_id=product.user.id) }}" class="cta-contact">
-                        <i class="fas fa-envelope"></i> Contacter le vendeur
-                    </a>                    
+                    <a href="{{ url_for('main.conversation', user_id=product.user_id, product_id=product.id) }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter le vendeur</a>                 
                 </div>
-                                                            
             </div>
         </div>
         {% else %}

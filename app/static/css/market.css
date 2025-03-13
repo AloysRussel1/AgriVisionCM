@@ -63,10 +63,30 @@ body {
     transition: background 0.3s ease;
     text-decoration: none;
     font-weight: bold;
-    margin-right: auto;
+    margin-right: 5px; /* Réduction de l'espacement */
 }
 .add-product:hover {
     background: #FF7F00;
+}
+
+.cta-button.chat-history {
+    background: #FF7F00; /* Orange pour se démarquer */
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 5px; /* Réduction de l'espacement */
+    margin-right: 140px;
+    font-size: 1em;
+    transition: background 0.3s;
+}
+
+.cta-button.chat-history:hover {
+    background: #e69500; /* Orange plus foncé au survol */
+}
+
+.cta-button.chat-history i {
+    margin-right: 5px;
 }
 
 /* Liste des produits */

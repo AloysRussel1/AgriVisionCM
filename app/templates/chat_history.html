@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Historique des Discussions - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_history.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="chat-history-container">
+    <div class="page-header">
+        <h1><i class="fas fa-comments"></i> Votre <span class="highlight">Historique de Discussions</span></h1>
+        <p>Retrouvez toutes vos conversations avec les vendeurs.</p>
+    </div>
+
+    <div class="chat-list">
+        {% if conversations %}
+            {% for convo in conversations %}
+            <a href="{{ url_for('main.conversation', user_id=convo['other_user'].id, product_id=convo['product'].id) }}" class="chat-item">
+                <div class="chat-avatar">
+                    <span>{{ convo['other_user'].username[0].upper() }}</span>
+                </div>
+                <div class="chat-details">
+                    <h3>{{ convo['other_user'].username }} <span class="product-name">({{ convo['product'].name }})</span></h3>
+                    <p class="last-message">{{ convo['last_message'].content[:50] }} {% if convo['last_message'].content|length > 50 %}...{% endif %}</p>
+                    <span class="timestamp">{{ convo['last_message'].timestamp.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div class="no-chats">
+                <i class="fas fa-leaf"></i>
+                <p>Aucune conversation pour le moment. Contactez un vendeur pour commencer !</p>
+                <a href="{{ url_for('main.market') }}" class="cta-button">Retour au Marché</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

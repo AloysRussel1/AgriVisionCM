@@ -2,23 +2,31 @@
 {% block title %}Chat avec {{ seller.username }}{% endblock %}
 
 {% block styles %}
-{{ super() }}  
-<link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
+    {{ super() }}  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
 {% endblock %}
 
 {% block content %}
 <section class="chat-container">
-    <h2>Discussion avec {{ seller.username }}</h2>
-    <div class="chat-box" id="chat-box">
+    <div class="chat-header">
+        <div class="user-info">
+            <div class="avatar">{{ seller.username[0].upper() }}</div>
+            <h2>{{ seller.username }}</h2>
+        </div>
+        <a href="{{ url_for('main.market') }}" class="close-btn"><i class="fas fa-times"></i></a>
+    </div>
+    <div class="chat-messages" id="chat-box">
         {% for message in messages %}
             <div class="message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}">
-                <p>{{ message.content }}</p>
+                <div class="message-content">
+                    <p>{{ message.content }}</p>
+                    <span class="timestamp">{{ message.timestamp.strftime('%H:%M') }}</span>
+                </div>
             </div>
         {% endfor %}
     </div>
-
     <div class="chat-input">
-        <input type="text" id="message-input" placeholder="Écrire un message...">
+        <input type="text" id="message-input" placeholder="Tapez votre message..." autocomplete="off">
         <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
     </div>
 </section>
@@ -26,6 +34,7 @@
 <script>
     var currentUserId = {{ current_user.id }};
     var sellerId = {{ seller.id }};
+    var productId = {{ product.id }};  // Ajout de productId
 </script>
 <script src="{{ url_for('static', filename='js/conversation.js') }}"></script>
 {% endblock %}

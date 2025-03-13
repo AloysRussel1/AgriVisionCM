@@ -1,0 +1,120 @@
+.chat-history-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 2em;
+    color: #2E8B57; /* Vert principal */
+}
+
+.page-header .highlight {
+    color: #FFA500; /* Orange pour contraste */
+}
+
+.page-header p {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f5f7f5; /* Fond légèrement vert */
+    border-radius: 10px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s;
+}
+
+.chat-item:hover {
+    background: #e8f0e8; /* Vert clair au survol */
+}
+
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    background: #FFA500; /* Orange */
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.chat-details {
+    flex: 1;
+}
+
+.chat-details h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #2E8B57;
+}
+
+.chat-details .product-name {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.chat-details .last-message {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #333;
+}
+
+.chat-details .timestamp {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.no-chats {
+    text-align: center;
+    padding: 40px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.no-chats i {
+    font-size: 2.5em;
+    color: #2E8B57;
+    margin-bottom: 10px;
+}
+
+.no-chats p {
+    font-size: 1.2em;
+    color: #666;
+}
+
+.no-chats .cta-button {
+    display: inline-block;
+    margin-top: 20px;
+    background: #2E8B57;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.no-chats .cta-button:hover {
+    background: #1e6b47;
+}

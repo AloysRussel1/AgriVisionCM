@@ -5,5 +5,4 @@ app = create_app()
 
 # Lance le serveur Flask avec SocketIO pour gérer les événements en temps réel
 if __name__ == '__main__':
-    # Exécuter l'application avec SocketIO (permet d'avoir des événements en temps réel comme les commentaires instantanés)
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
