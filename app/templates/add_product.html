@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Ajouter un produit - AgriVisionCM{% endblock %}
+{% block title %}{{ 'Modifier' if product else 'Ajouter' }} un produit - AgriVisionCM{% endblock %}
 
 {% block styles %}
     {{ super() }}
@@ -8,53 +8,52 @@
 
 {% block content %}
 <section class="page-title">
-    <h1>Ajouter un nouveau <span class="highlight">Produit</span></h1>
+    <h1>{{ 'Modifier' if product else 'Ajouter' }} un nouveau <span class="highlight">Produit</span></h1>
 </section>
 
-<!-- Formulaire d'ajout de produit -->
-<form method="POST" action="{{ url_for('main.add_product') }}" enctype="multipart/form-data" class="product-form">
+<!-- Formulaire d'ajout ou d'édition de produit -->
+<form method="POST" action="{{ url_for('main.add_product', product_id=product.id) if product else url_for('main.add_product') }}" enctype="multipart/form-data" class="product-form">
     <div class="form-group">
         <label for="name">Nom du produit</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name" value="{{ product.name if product else '' }}" required>
     </div>
     <div class="form-group">
         <label for="price">Prix (FCFA/Unité)</label>
-        <input type="number" id="price" name="price" required>
+        <input type="number" id="price" name="price" value="{{ product.price if product else '' }}" required>
     </div>
     <div class="form-group">
         <label for="unit">Unité</label>
         <select id="unit" name="unit" required>
-            <option value="kilo">Kilo</option>
-            <option value="sac">Sac</option>
-            <option value="seau">Seau</option>
-            <option value="cagot">Cagot</option>
-            <option value="litre">Litre</option>
-            <option value="pièce">Pièce</option>
-            <option value="tonne">Tonne</option>
-            <option value="autre">Autre</option>
+            <option value="kilo" {{ 'selected' if product and product.unit == 'kilo' }}>Kilo</option>
+            <option value="sac" {{ 'selected' if product and product.unit == 'sac' }}>Sac</option>
+            <option value="seau" {{ 'selected' if product and product.unit == 'seau' }}>Seau</option>
+            <option value="cagot" {{ 'selected' if product and product.unit == 'cagot' }}>Cagot</option>
+            <option value="litre" {{ 'selected' if product and product.unit == 'litre' }}>Litre</option>
+            <option value="pièce" {{ 'selected' if product and product.unit == 'pièce' }}>Pièce</option>
+            <option value="tonne" {{ 'selected' if product and product.unit == 'tonne' }}>Tonne</option>
+            <option value="autre" {{ 'selected' if product and product.unit == 'autre' }}>Autre</option>
         </select>
     </div>
     <div class="form-group">
         <label for="city">Ville</label>
-        <input type="text" id="city" name="city" required>
+        <input type="text" id="city" name="city" value="{{ product.city if product else '' }}" required>
     </div>
     <div class="form-group">
         <label for="quantity">Quantité disponible</label>
-        <input type="number" id="quantity" name="quantity" required>
+        <input type="number" id="quantity" name="quantity" value="{{ product.quantity if product else '' }}" required>
     </div>
     <div class="form-group">
         <label for="description">Description (facultatif)</label>
-        <textarea id="description" name="description"></textarea>
+        <textarea id="description" name="description">{{ product.description if product else '' }}</textarea>
     </div>
     <div class="form-group">
-        <label for="image">Image du produit</label>
-        <input type="file" id="image" name="image" required>
+        <label for="image">Image du produit {{ '(facultatif pour modification)' if product else '' }}</label>
+        <input type="file" id="image" name="image" {{ '' if not product else 'not' }} required>
+        {% if product %}
+        <p>Image actuelle : <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="Image actuelle" style="max-width: 100px;"></p>
+        {% endif %}
     </div>
-    <div class="form-group">
-        <label for="contact">Contact du vendeur</label>
-        <input type="text" id="contact" name="contact" required>
-    </div>
-    <button type="submit" class="cta-button">Ajouter le produit</button>
+   
+    <button type="submit" class="cta-button">{{ 'Mettre à jour' if product else 'Ajouter le produit' }}</button>
 </form>
-
 {% endblock %}

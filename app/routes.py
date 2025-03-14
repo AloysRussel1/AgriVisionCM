@@ -135,9 +135,19 @@ def market():
     products = Product.query.all()
     return render_template('market.html', products=products)
 
-@main.route('/add_product', methods=['GET', 'POST'])
+@main.route('/add_product', defaults={'product_id': None}, methods=['GET', 'POST'])
+@main.route('/add_product/<int:product_id>', methods=['GET', 'POST'])
 @login_required
-def add_product():
+def add_product(product_id=None):
+    print(f"URL appelée : {request.url}")
+    product = None
+    if product_id:
+        product = Product.query.get_or_404(product_id)
+        if product.user_id != current_user.id:
+            flash('Vous ne pouvez pas modifier ce produit.', 'error')
+            return redirect(url_for('main.market'))
+        print(f"Produit récupéré : {product.__dict__}")
+
     if request.method == 'POST':
         name = request.form['name']
         price = request.form['price']
@@ -145,29 +155,63 @@ def add_product():
         city = request.form['city']
         quantity = request.form['quantity']
         description = request.form['description']
-        image = request.files['image']
+        image = request.files.get('image')
 
-        if image:
+        if product:  # Mode édition
+            product.name = name
+            product.price = price
+            product.unit = unit
+            product.city = city
+            product.quantity = quantity
+            product.description = description
+            if image and image.filename:
+                filename = secure_filename(image.filename)
+                image_path = filename
+                image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], image_path))
+                product.image = image_path
+            db.session.commit()
+            flash('Produit mis à jour avec succès !', 'success')
+        else:  # Mode ajout
+            if not image or not image.filename:
+                flash('Une image est requise pour ajouter un produit.', 'error')
+                return redirect(url_for('main.add_product'))
+
             filename = secure_filename(image.filename)
             image_path = filename
             image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], image_path))
-        else:
-            image_path = None
 
-        new_product = Product(
-            name=name, price=price, city=city,
-            quantity=quantity, description=description,
-            unit=unit,
-            image=image_path,
-            user_id=current_user.id
-        )
-        db.session.add(new_product)
-        db.session.commit()
+            new_product = Product(
+                name=name,
+                price=price,
+                unit=unit,
+                city=city,
+                quantity=quantity,
+                description=description,
+                image=image_path,
+                user_id=current_user.id
+            )
+            db.session.add(new_product)
+            db.session.commit()
+            flash('Produit ajouté avec succès !', 'success')
 
-        flash('Produit ajouté avec succès', 'success')
         return redirect(url_for('main.market'))
 
-    return render_template('add_product.html')
+    print(f"Rendu avec product : {product}")
+    return render_template('add_product.html', product=product)
+
+
+@main.route('/delete_product/<int:product_id>')
+@login_required
+def delete_product(product_id):
+    product = Product.query.get_or_404(product_id)
+    if product.user_id != current_user.id:
+        flash('Vous ne pouvez pas supprimer ce produit.', 'error')
+        return redirect(url_for('main.market'))
+
+    db.session.delete(product)
+    db.session.commit()
+    flash('Produit supprimé avec succès !', 'success')
+    return redirect(url_for('main.market'))
 
 # Chat
 @main.route("/conversation/<int:user_id>", methods=['GET', 'POST'])  # Plus de <int:product_id>

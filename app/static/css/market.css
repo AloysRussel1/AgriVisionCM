@@ -63,26 +63,26 @@ body {
     transition: background 0.3s ease;
     text-decoration: none;
     font-weight: bold;
-    margin-right: 5px; /* Réduction de l'espacement */
+    margin-right: 5px;
 }
 .add-product:hover {
     background: #FF7F00;
 }
 
 .cta-button.chat-history {
-    background: #FF7F00; /* Orange pour se démarquer */
+    background: #FF7F00;
     color: #fff;
     padding: 10px 15px;
     border-radius: 5px;
     text-decoration: none;
-    margin-left: 5px; /* Réduction de l'espacement */
+    margin-left: 5px;
     margin-right: 140px;
     font-size: 1em;
     transition: background 0.3s;
 }
 
 .cta-button.chat-history:hover {
-    background: #e69500; /* Orange plus foncé au survol */
+    background: #e69500;
 }
 
 .cta-button.chat-history i {
@@ -90,10 +90,20 @@ body {
 }
 
 /* Liste des produits */
+.products-list {
+    margin-bottom: 40px;
+}
+
+.products-list h2 {
+    font-size: 1.8rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
 .products-list .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Réduit de 280px à 250px */
+    gap: 15px; /* Réduit de 20px à 15px */
 }
 
 /* Carte de produit */
@@ -110,39 +120,91 @@ body {
 }
 .product-card img {
     width: 100%;
-    height: 200px;
+    height: 180px; /* Réduit de 200px à 180px */
     object-fit: cover;
 }
 .product-info {
-    padding: 1.2rem;
+    padding: 1rem; /* Réduit de 1.2rem à 1rem */
+    display: flex;
+    flex-direction: column;
+    min-height: 220px; /* Réduit de 250px à 220px */
 }
 .product-info h3 {
     color: #4CAF50;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem; /* Réduit de 1.5rem à 1.4rem */
+    margin-bottom: 0.4rem; /* Réduit de 0.5rem à 0.4rem */
 }
 .product-info .product-details {
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Réduit de 0.9rem à 0.85rem */
     color: #555;
 }
 .product-info .product-details p i {
-    margin-right: 8px;
+    margin-right: 6px; /* Réduit de 8px à 6px */
     color: #4CAF50;
 }
 .product-info p.description {
-    font-size: 1rem;
+    font-size: 0.9rem; /* Réduit de 1rem à 0.9rem */
     color: #333;
+    flex-grow: 1;
 }
+.product-info p.description i {
+    margin-right: 6px; /* Aligné avec les autres icônes */
+    color: #4CAF50;
+}
+
+/* Bouton "Contacter" pour les produits des autres */
+.contact {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.8rem; /* Réduit de 1rem à 0.8rem */
+}
+
 .product-info .cta-contact {
     background: #FF8C00;
     color: white;
-    padding: 10px 20px;
+    padding: 6px 14px; /* Réduit de 8px 16px à 6px 14px */
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
     display: inline-block;
-    margin-top: 1rem;
+    font-size: 0.9rem; /* Ajout pour cohérence */
 }
 .product-info .cta-contact:hover {
     background: #FF7F00;
+}
+
+/* Boutons d'action (édition et suppression) et "Contacter" pour mes produits */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.8rem; /* Réduit de 1rem à 0.8rem */
+}
+
+.actions .action-btn-group {
+    display: flex;
+    gap: 8px; /* Réduit de 10px à 8px */
+}
+
+.action-btn {
+    padding: 6px; /* Réduit de 8px à 6px */
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem; /* Réduit de 1rem à 0.9rem */
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+}
+.edit-btn:hover {
+    background-color: #45a049;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+}
+.delete-btn:hover {
+    background-color: #c0392b;
 }

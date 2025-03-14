@@ -25,29 +25,60 @@
     <button class="filter-button" data-filter="price">Par Prix</button>
 </div>
 
-<!-- Liste des produits disponibles -->
+<!-- Mes produits (Utilisateur connecté) -->
+{% if current_user.is_authenticated %}
 <section class="products-list">
-    <h2>Produits disponibles</h2>
+    <h2>Mes produits</h2>
     <div class="product-grid">
-        {% for product in products %}
+        {% for product in products if product.user_id == current_user.id %}
         <div class="product-card" data-city="{{ product.city }}" data-price="{{ product.price }}">
             <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="Image du produit">
             <div class="product-info">
                 <h3>{{ product.name }}</h3>
                 <div class="product-details">
                     <p><i class="fas fa-map-marker-alt"></i> <strong>Ville:</strong> {{ product.city }}</p>
-                    <p><i class="fas fa-tag"></i> <strong>PrixOid:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
+                    <p><i class="fas fa-tag"></i> <strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
                     <p><i class="fas fa-box"></i> <strong>Quantité:</strong> {{ product.quantity }} {{ product.unit }}</p>
                 </div>
-                <p class="description">{{ product.description[:100] }}...</p>
-
-                <div class="contact">
-                    <a href="{{ url_for('main.conversation', user_id=product.user_id, product_id=product.id) }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter le vendeur</a>                 
+                <p class="description"><i class="fas fa-info-circle"></i> <strong>Description:</strong> {{ product.description[:100] }}...</p>
+                <div class="actions">
+                    <div class="action-btn-group">
+                        <a href="{{ url_for('main.add_product', product_id=product.id) }}" class="action-btn edit-btn" title="Éditer"><i class="fas fa-edit"></i></a>
+                        <a href="{{ url_for('main.delete_product', product_id=product.id) }}" class="action-btn delete-btn" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?');"><i class="fas fa-trash"></i></a>
+                    </div>
+                    <a href="{{ url_for('main.conversation', user_id=product.user_id) }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter</a>
                 </div>
             </div>
         </div>
         {% else %}
-        <p>Aucun produit disponible.</p>
+        <p>Vous n'avez publié aucun produit pour le moment.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Autres produits -->
+<section class="products-list">
+    <h2>Autres produits disponibles</h2>
+    <div class="product-grid">
+        {% for product in products if product.user_id != current_user.id or not current_user.is_authenticated %}
+        <div class="product-card" data-city="{{ product.city }}" data-price="{{ product.price }}">
+            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="Image du produit">
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <div class="product-details">
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Ville:</strong> {{ product.city }}</p>
+                    <p><i class="fas fa-tag"></i> <strong>Prix:</strong> {{ product.price }} FCFA / {{ product.unit }}</p>
+                    <p><i class="fas fa-box"></i> <strong>Quantité:</strong> {{ product.quantity }} {{ product.unit }}</p>
+                </div>
+                <p class="description"><i class="fas fa-info-circle"></i> <strong>Description:</strong> {{ product.description[:100] }}...</p>
+                <div class="contact">
+                    <a href="{{ url_for('main.conversation', user_id=product.user_id) }}" class="cta-contact"><i class="fas fa-envelope"></i> Contacter le vendeur</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>Aucun autre produit disponible.</p>
         {% endfor %}
     </div>
 </section>
