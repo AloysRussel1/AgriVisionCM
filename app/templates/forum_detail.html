@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ forum.title }} - Forum{% endblock %}
+{% block title %}{{ forum.title }} - Forum - AgriVisionCM{% endblock %}
 
 {% block styles %}
     {{ super() }}
@@ -8,35 +8,53 @@
 {% endblock %}
 
 {% block content %}
-<section class="forum-topic">
+<section class="forum-detail">
+    <!-- En-tête du Sujet -->
     <div class="topic-header">
         <h1>{{ forum.title }}</h1>
-        <p class="info">Par <span class="author">{{ forum.user.username }}</span> | {{ forum.created_at.strftime('%d/%m/%Y') }}</p>
+        <div class="topic-meta">
+            <div class="author-info">
+                <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar" class="avatar">
+                <p>Par <span class="author">{{ forum.user.username }}</span> • {{ forum.created_at.strftime('%d %b %Y') }}</p>
+            </div>
+            <div class="topic-actions">
+                <a href="#" class="action-btn"><i class="fas fa-share"></i> Partager</a>
+                <a href="#" class="action-btn"><i class="fas fa-bookmark"></i> Sauvegarder</a>
+            </div>
+        </div>
     </div>
-    
+
+    <!-- Contenu Principal -->
     <div class="topic-content">
-        <div class="topic-left">
+        <div class="topic-main">
+            <!-- Corps du Sujet -->
             <div class="content-body">
                 <p>{{ forum.content }}</p>
             </div>
+
+            <!-- Section Commentaires -->
             <div class="comments-section">
-                <h2>Commentaires</h2>
+                <h2><i class="fas fa-comments"></i> Commentaires ({{ forum.comments|length }})</h2>
                 {% if forum.comments|length > 0 %}
                     {% for comment in forum.comments %}
                         <div class="comment-card">
-                            <p class="comment-info">
-                                Par <span class="author">{{ comment.user.username }}</span> le {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
-                            </p>
+                            <div class="comment-header">
+                                <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar" class="avatar">
+                                <div class="comment-meta">
+                                    <p class="comment-author">{{ comment.user.username }}</p>
+                                    <p class="comment-date">{{ comment.created_at.strftime('%d %b %Y à %H:%M') }}</p>
+                                </div>
+                            </div>
                             <p class="comment-text">{{ comment.content }}</p>
                             <div class="comment-reactions">
                                 <a href="#" class="reaction" data-reaction="like" data-comment-id="{{ comment.id }}">
-                                    <i class="fa fa-thumbs-up"></i> <span class="reaction-count" id="like-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "like") | list | length }}</span>
+                                    <i class="fas fa-thumbs-up"></i> <span id="like-count-{{ comment.id }}">{{ comment.reactions | selectattr("reaction_type", "equalto", "like") | list | length }}</span>
                                 </a>
                                 <a href="#" class="reaction" data-reaction="love" data-comment-id="{{ comment.id }}">
-                                    <i class="fa fa-heart"></i> <span class="reaction-count" id="love-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "love") | list | length }}</span>
+                                    <i class="fas fa-heart"></i> <span id="love-count-{{ comment.id }}">{{ comment.reactions | selectattr("reaction_type", "equalto", "love") | list | length }}</span>
                                 </a>
                                 <a href="#" class="reaction" data-reaction="laugh" data-comment-id="{{ comment.id }}">
-                                    <i class="fa fa-smile"></i> <span class="reaction-count" id="laugh-count-{{ comment.id }}">{{ comment.reactions | selectattr("type", "equalto", "laugh") | list | length }}</span>
+                                    <i class="fas fa-smile"></i> <span id="laugh-count-{{ comment.id }}">{{ comment.reactions | selectattr("reaction_type", "equalto", "laugh") | list | length }}</span>
                                 </a>
                             </div>
                         </div>
@@ -46,14 +64,36 @@
                 {% endif %}
             </div>
 
+            <!-- Formulaire de Réponse -->
             <div class="reply-form">
-                <h2>Répondre</h2>
+                <h2><i class="fas fa-reply"></i> Répondre</h2>
                 <form id="new-comment-form" method="POST" action="{{ url_for('main.forum_detail', forum_id=forum.id) }}">
                     <textarea name="comment" placeholder="Votre commentaire..." required></textarea>
-                    <button type="submit" class="cta-button">Envoyer</button>
+                    <button type="submit" class="cta-button"><i class="fas fa-paper-plane"></i> Envoyer</button>
                 </form>
             </div>
         </div>
+
+        <!-- Barre Latérale -->
+        <aside class="topic-sidebar">
+            <div class="sidebar-section">
+                <h3><i class="fas fa-info-circle"></i> À Propos</h3>
+                <p><strong>Créé le :</strong> {{ forum.created_at.strftime('%d %b %Y') }}</p>
+                <p><strong>Vues :</strong> {{ forum.views or 0 }}</p>
+                <p><strong>Commentaires :</strong> {{ forum.comments|length }}</p>
+            </div>
+            <div class="sidebar-section">
+                <h3><i class="fas fa-users"></i> Contributeurs</h3>
+                <ul>
+                    <li>{{ forum.user.username }} (Auteur)</li>
+                    {% for comment in forum.comments %}
+                        {% if loop.index0 < 3 %}
+                            <li>{{ comment.user.username }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
     </div>
 </section>
 {% endblock %}

@@ -48,7 +48,6 @@ def create_app():
     from .model.user_model import User
     from .model.forum_model import Forum
     from .model.comment_model import Comment
-    from .model.resource_model import Resource
     from .model.event_model import Event
     from .model.registration_model import Registration
     from .model.knowledge_share_model import KnowledgeShare

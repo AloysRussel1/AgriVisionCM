@@ -1,68 +1,200 @@
-/* add_knowledge.css */
-
-/* Conteneur principal du formulaire */
-.form-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+/* Variables */
+:root {
+    --vert-principal: #4CAF50;
+    --vert-fonce: #2E7D32;
+    --orange: #FF8C00;
+    --orange-hover: #e67e22;
+    --gris-clair: #f4f4f4;
+    --gris-moyen: #777;
+    --gris-fonce: #333;
+    --blanc: #fff;
+    --erreur: #e74c3c;
 }
 
-/* Mise en forme globale du formulaire */
+/* Mise en Page Générale */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--gris-clair);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* En-tête */
+.add-header {
+    background: var(--blanc);
+    padding: 2rem;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto 0;
+    max-width: 800px;
+}
+
+.add-header h1 {
+    font-size: 2.5rem;
+    color: var(--vert-fonce);
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.add-header .highlight {
+    color: var(--orange);
+}
+
+.header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-meta p {
+    font-size: 1.1rem;
+    color: var(--gris-moyen);
+    margin: 0;
+}
+
+.cta-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--vert-principal);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.cta-back:hover {
+    background: var(--vert-principal);
+    color: var(--blanc);
+}
+
+/* Conteneur du Formulaire */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background: var(--blanc);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Groupe de Champs */
+.form-group {
     display: flex;
     flex-direction: column;
 }
 
-/* Style des labels */
-.form-container label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
+.form-group label {
+    font-weight: 600;
+    color: var(--vert-fonce);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* Styles des champs de saisie, zones de texte, sélecteurs et upload */
-.form-container .form-input,
-.form-container .form-select,
-.form-container .form-textarea,
-.form-container .form-file {
+.form-input,
+.form-select,
+.form-textarea,
+.form-file {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 0.9rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
 
-/* Ajustement pour le textarea */
-.form-container .form-textarea {
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.form-file:focus {
+    outline: none;
+    border-color: var(--vert-principal);
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.form-textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 150px;
 }
 
-/* Style du bouton d'envoi (CTA) */
+.file-note {
+    font-size: 0.9rem;
+    color: var(--gris-moyen);
+    margin-top: 0.5rem;
+}
+
+.error {
+    color: var(--erreur);
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+/* Bouton de Soumission */
 .cta-button {
-    background-color: #28a745;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--vert-principal);
+    color: var(--blanc);
+    padding: 1rem 2rem;
     border: none;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 18px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .cta-button:hover {
-    background-color: #218838;
+    background: var(--orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive design */
+/* Responsivité */
 @media (max-width: 768px) {
+    .add-header {
+        padding: 1.5rem;
+    }
+
+    .add-header h1 {
+        font-size: 2rem;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
     .form-container {
-        padding: 20px;
-        margin: 20px;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-input,
+    .form-select,
+    .form-textarea,
+    .form-file {
+        padding: 0.7rem;
+    }
+
+    .cta-button {
+        padding: 0.8rem 1.5rem;
     }
 }

@@ -11,7 +11,7 @@ class Event(db.Model):
     description = db.Column(db.Text)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
-    location = db.Column(db.String(200))  # Peut être une adresse physique ou un lien pour un événement en ligne
+    location = db.Column(db.String(200))  # Adresse physique ou lien en ligne
     type = db.Column(db.String(50))  # 'webinaire', 'réunion locale', etc.
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('events', lazy=True))

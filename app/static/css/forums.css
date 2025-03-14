@@ -1,165 +1,207 @@
-/* ===============================
-   Global & Réglages de Base
-================================= */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
+/* Réinitialisation de Base */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   Titres & En-tête de Page
-================================= */
-.page-header {
-    position: relative;
-    padding: 4rem 2rem;
+/* Introduction Compacte */
+.forum-intro {
+    max-width: 1200px;
+    margin: 2rem auto 3rem auto;
+    padding: 0 20px;
     text-align: center;
-    color: #4CAF50;
-    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    border-bottom: 3px solid #4CAF50;
 }
-.page-header .header-overlay {
-    position: relative;
-    z-index: 1;
+
+.forum-intro .intro-content {
+    padding: 2rem 0;
 }
-.page-header .header-content {
-    position: relative;
-    z-index: 2;
-}
-.page-header h1 {
-    font-size: 3rem;
+
+.forum-intro h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
     margin: 0;
-    font-weight: bold;
+    color: #2E7D32;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
-.page-header p {
-    font-size: 1.4rem;
-    margin-top: 1rem;
-    max-width: 700px;
+
+.forum-intro .highlight {
+    color: #FF8C00; /* Orange cohérent */
+}
+
+.forum-intro p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-top: 0.5rem;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    color: #333;
 }
 
-/* ===============================
-   Contrôles du Forum
-================================= */
+/* Contrôles du Forum */
 .forum-controls {
+    max-width: 1200px;
+    margin: 0 auto 3rem auto;
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
-    margin-bottom: 2rem;
-    gap: 1rem; /* Ajouter un espace entre le bouton et la barre de recherche */
+    gap: 1.5rem;
 }
+
 .forum-controls .cta-button {
     background: #4CAF50;
     color: #fff;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 5px;
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
     text-decoration: none;
-    transition: background 0.3s ease;
-    margin-bottom: 1rem;
-    flex-shrink: 0; /* Empêcher le bouton de se réduire */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
 .forum-controls .cta-button:hover {
     background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 .search-bar {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    width: 100%; /* La barre de recherche occupe tout l'espace restant */
-    max-width: 500px; /* Fixer une largeur maximale */
+    max-width: 500px;
+    width: 100%;
 }
+
 .search-bar input {
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-size: 1rem;
-    flex-grow: 1; /* Permet à l'input de prendre tout l'espace disponible */
+    flex-grow: 1;
+    transition: border-color 0.3s ease;
 }
+
+.search-bar input:focus {
+    border-color: #FF8C00;
+    outline: none;
+}
+
 .search-bar .search-button {
     background: #FF8C00;
     color: #fff;
     border: none;
-    padding: 0.8rem 1rem;
-    border-radius: 5px;
+    padding: 0.9rem 1.2rem;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
 .search-bar .search-button:hover {
     background: #e67e22;
+    transform: translateY(-2px);
 }
 
-
-/* ===============================
-   Liste des Sujets
-================================= */
+/* Liste des Sujets */
 .forum-list {
-    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* ===============================
-   Sujet de Forum - Affichage en Ligne
-================================= */
 .forum-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background: #fff;
     padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
+
 .forum-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
+
+.forum-icon {
+    margin-right: 1.5rem;
+}
+
+.forum-icon i {
+    font-size: 2rem;
+    color: #4CAF50;
+}
+
 .forum-info {
     flex: 1;
 }
+
 .forum-info .creator {
     font-size: 0.9rem;
     color: #777;
+    margin-bottom: 0.5rem;
 }
+
+.forum-info .author {
+    font-weight: 600;
+    color: #4CAF50;
+}
+
 .forum-info h2 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     color: #2E7D32;
+    margin: 0 0 0.5rem 0;
 }
+
 .forum-info h2 a {
     text-decoration: none;
     color: inherit;
+    transition: color 0.3s ease;
 }
+
+.forum-info h2 a:hover {
+    color: #FF8C00;
+}
+
 .forum-info .excerpt {
     font-size: 1rem;
     color: #555;
-    margin-bottom: 1rem;
-}
-.forum-stats {
-    text-align: right;
-}
-.forum-stats .interactions {
-    font-size: 1rem;
-    color: #555;
+    line-height: 1.5;
 }
 
-/* ===============================
-   Divers & Liens
-================================= */
-a {
-    color: inherit;
-    text-decoration: none;
+.forum-stats {
+    text-align: right;
+    min-width: 150px;
 }
-a:hover {
-    text-decoration: underline;
+
+.forum-stats .stat {
+    display: block;
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 0.5rem;
 }
+
+.forum-stats .stat i {
+    margin-right: 0.5rem;
+    color: #FF8C00;
+}
+
+/* Divers */
 .no-topics {
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #777;
-    padding: 2rem;
+    padding: 3rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

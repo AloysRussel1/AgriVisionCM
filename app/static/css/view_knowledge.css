@@ -1,0 +1,131 @@
+/* Variables */
+:root {
+    --vert-principal: #4CAF50;
+    --vert-fonce: #2E7D32;
+    --orange: #FF8C00;
+    --orange-hover: #e67e22;
+    --gris-clair: #f4f4f4;
+    --gris-moyen: #777;
+    --gris-fonce: #333;
+    --blanc: #fff;
+}
+
+/* En-tête */
+.view-header {
+    background: var(--blanc);
+    padding: 2rem;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto 0;
+    max-width: 1200px;
+}
+
+.view-header h1 {
+    font-size: 2.5rem;
+    color: var(--vert-fonce);
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+}
+
+.header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-info .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--orange);
+}
+
+.author-info p {
+    font-size: 1rem;
+    color: var(--gris-moyen);
+    margin: 0;
+}
+
+.author-info .author {
+    font-weight: 600;
+    color: var(--vert-principal);
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.cta-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--vert-principal);
+    color: var(--blanc);
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background: var(--orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenu */
+.view-content {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background: var(--blanc);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.video-container {
+    text-align: center;
+}
+
+.full-video {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 8px;
+}
+
+.qna-content p {
+    font-size: 1.2rem;
+    color: var(--gris-fonce);
+    line-height: 1.8;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    .view-header {
+        padding: 1.5rem;
+    }
+
+    .view-header h1 {
+        font-size: 2rem;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-content {
+        padding: 1rem;
+    }
+}

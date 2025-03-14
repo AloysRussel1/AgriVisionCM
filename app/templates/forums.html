@@ -4,25 +4,24 @@
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forums.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
-<!-- En-tête Moderne -->
-<section class="page-header">
-    <div class="header-overlay">
-        <div class="header-content">
-            <h1>Forum AgriVisionCM</h1>
-            <p>Partagez vos idées, échangez vos conseils et faites grandir votre savoir agricole</p>
-        </div>
+<!-- Introduction Compacte -->
+<section class="forum-intro">
+    <div class="intro-content">
+        <h1>Forum <span class="highlight">AgriVisionCM</span></h1>
+        <p>Partagez vos idées, échangez vos conseils et faites grandir votre savoir agricole</p>
     </div>
 </section>
 
 <!-- Contrôles du Forum -->
 <section class="forum-controls">
-    <a href="{{ url_for('main.new_forum') }}" class="cta-button">Nouveau Sujet</a>
+    <a href="{{ url_for('main.new_forum') }}" class="cta-button"><i class="fas fa-plus"></i> Nouveau Sujet</a>
     <div class="search-bar">
         <input type="text" placeholder="Rechercher dans le forum..." />
-        <button type="button" class="search-button">Rechercher</button>
+        <button type="button" class="search-button"><i class="fas fa-search"></i> Rechercher</button>
     </div>
 </section>
 
@@ -33,10 +32,17 @@
     {% else %}
         {% for forum in forums %}
         <div class="forum-item">
+            <div class="forum-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
             <div class="forum-info">
-                <p class="creator">Créé par <span class="author">{{ forum.user.username }}</span></p>
+                <p class="creator">Créé par <span class="author">{{ forum.user.username }}</span> • {{ forum.created_at.strftime('%d %b %Y') }}</p>
                 <h2><a href="{{ url_for('main.forum_detail', forum_id=forum.id) }}">{{ forum.title }}</a></h2>
-                <p class="excerpt">{{ forum.content | truncate(150, true) }}</p> <!-- Aperçu du contenu -->
+                <p class="excerpt">{{ forum.content | truncate(150, true) }}</p>
+            </div>
+            <div class="forum-stats">
+                <span class="stat"><i class="fas fa-comment"></i> {{ forum.comments|length }} Réponses</span>
+                <span class="stat"><i class="fas fa-eye"></i> {{ forum.views or 0 }} Vues</span>
             </div>
         </div>
         {% endfor %}

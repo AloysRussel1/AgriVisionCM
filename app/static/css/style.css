@@ -64,7 +64,8 @@ a:hover {
     padding: 8px 15px;
     text-align: center;
     font-size: 0.85em;
-    border-radius: 20px; /* Coins arrondis pour un look personnalisé */
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ombre légère */
     overflow: hidden;
     z-index: 1000;

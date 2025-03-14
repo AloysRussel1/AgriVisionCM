@@ -3,17 +3,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const knowledgeItems = document.querySelectorAll('.knowledge-item');
 
     filterButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // Supprime la classe 'active' de tous les boutons
+        button.addEventListener('click', () => {
+            // Retirer la classe active de tous les boutons
             filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Ajoute la classe 'active' au bouton cliqué
-            e.target.classList.add('active');
+            // Ajouter la classe active au bouton cliqué
+            button.classList.add('active');
 
-            const filter = e.target.getAttribute('data-filter');
+            const filter = button.getAttribute('data-filter');
 
             knowledgeItems.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-type') === filter) {
-                    item.style.display = 'block';
+                const itemType = item.getAttribute('data-type');
+                if (filter === 'all' || itemType === filter) {
+                    item.style.display = 'flex';
                 } else {
                     item.style.display = 'none';
                 }

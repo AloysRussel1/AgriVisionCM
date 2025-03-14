@@ -1,168 +1,312 @@
-/* Styles globaux */
+/* Réinitialisation et Variables */
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --vert-principal: #4CAF50;
+    --vert-fonce: #2E7D32;
+    --orange: #FF8C00;
+    --orange-hover: #e67e22;
+    --gris-clair: #f4f4f4;
+    --gris-moyen: #777;
+    --gris-fonce: #333;
+    --blanc: #fff;
+}
+
+/* Mise en Page Générale */
 body {
     font-family: 'Arial', sans-serif;
-    background: #f6f6f6;
-    color: #333;
+    background-color: var(--gris-clair);
+    margin: 0;
+    padding: 0;
     line-height: 1.6;
 }
 
-/* Titre de la page */
-.page-title {
-    text-align: center;
-    padding: 2rem 0;
-}
-.page-title h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #4CAF50; /* Vert principal */
-}
-.page-title .highlight {
-    color: #FF8C00; /* Nuance d'orange/or */
+/* En-tête */
+.knowledge-header {
+    background: var(--blanc);
+    padding: 2rem;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto 0;
+    max-width: 1200px;
 }
 
-/* Contrôles en haut de page */
-.knowledge-controls {
+.knowledge-header h1 {
+    font-size: 2.5rem;
+    color: var(--vert-fonce);
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.knowledge-header .highlight {
+    color: var(--orange);
+}
+
+.header-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background: #e7e7e7;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 1rem;
 }
+
+.header-meta p {
+    font-size: 1.1rem;
+    color: var(--gris-moyen);
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
 .cta-button {
-    background: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--vert-principal);
+    color: var(--blanc);
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
     text-decoration: none;
-    transition: background 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
+
 .cta-button:hover {
-    background: #45a049;
+    background: var(--orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
+/* Contrôles */
+.knowledge-controls {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    background: var(--gris-clair);
+}
+
 .filter-section {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 0.5rem;
 }
+
 .filter-button {
-    background: #4CAF50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--vert-principal);
     border: none;
-    color: white;
-    padding: 10px 15px;
+    color: var(--blanc);
+    padding: 0.7rem 1.2rem;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background 0.3s ease;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
+
 .filter-button:hover,
 .filter-button.active {
-    background: #45a049;
+    background: var(--vert-fonce);
+    transform: translateY(-2px);
 }
 
-/* Grille d'affichage des ressources */
+/* Grille */
 .knowledge-grid {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    padding: 2rem 4rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    background: var(--blanc);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Carte individuelle de ressource */
+/* Carte Individuelle */
 .knowledge-item {
-    background: #ffffff;
+    background: var(--blanc);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     border: 1px solid #e0e0e0;
-}
-.knowledge-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-/* Contenu de la carte */
-.item-content {
-    padding: 1.5rem;
+.knowledge-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* En-tête de la Carte */
+.item-header {
+    padding: 1.5rem 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--vert-fonce);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.type-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    color: var(--blanc);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.knowledge-item[data-type="article"] .type-badge { background: #e74c3c; } /* Rouge pour PDF */
+.knowledge-item[data-type="video"] .type-badge { background: #27ae60; } /* Vert pour vidéo */
+.knowledge-item[data-type="qna"] .type-badge { background: #FF7043; } /* Orange pour Q&A */
+
+/* Meta */
+.item-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.item-meta .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--orange);
+}
+
+.item-meta p {
+    font-size: 0.9rem;
+    color: var(--gris-moyen);
+    margin: 0;
+}
+
+.item-meta .author {
+    font-weight: 600;
+    color: var(--vert-principal);
+}
+
+/* Corps */
+.item-body {
+    padding: 0 1.5rem 1rem;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.5rem;
 }
-.item-content h2 {
-    margin-top: 0;
-    color: #2E7D32; /* Vert foncé pour le titre */
-    font-size: 1.5rem;
-    font-weight: 600;
+
+.item-body i {
+    color: var(--gris-moyen);
+    align-self: center;
 }
-.item-content .info {
-    font-size: 0.9em;
-    color: #7f8c8d;
-    margin-bottom: 15px;
-}
-.item-content .item-body {
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+.item-body p {
+    font-size: 1rem;
+    color: var(--gris-fonce);
+    margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-}
-.item-content .read-more {
-    color: #FF8C00; /* Orange foncé pour le lien "Lire la suite" */
-    text-decoration: none;
-}
-.item-content .read-more:hover {
-    text-decoration: underline;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Pied de carte : positionné en bas grâce à flex */
+.preview-video {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+}
+
+/* Pied */
 .item-footer {
-    margin-top: auto;
+    padding: 0 1.5rem 1.5rem;
     text-align: right;
 }
 
-/* Bouton de lecture sous forme de lien, sans bordure */
 .cta-read {
-    color: #4CAF50; /* Couleur verte du thème */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--vert-principal);
     text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
     transition: all 0.3s ease;
 }
+
 .cta-read:hover {
-    background-color: #4CAF50;
-    color: white;
+    background: var(--vert-principal);
+    color: var(--blanc);
 }
 
-/* Badge de type */
-.item-content .type {
-    font-size: 0.8em;
-    padding: 5px 8px;
-    border-radius: 4px;
-    color: white;
-    display: inline-block;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin-bottom: 10px;
-    background: #FF7043; /* Couleur par défaut (une nuance d'orange) */
+/* Aucun Contenu */
+.no-content {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: var(--gris-clair);
+    border-radius: 10px;
 }
-/* Couleurs spécifiques par type */
-.knowledge-item[data-type="video"] .type {
-    background: #27ae60; /* Vert pour les vidéos */
+
+.no-content i {
+    font-size: 2rem;
+    color: var(--orange);
+    margin-bottom: 1rem;
 }
-.knowledge-item[data-type="article"] .type {
-    background: #FF9800; /* Orange pour les articles */
+
+.no-content p {
+    font-size: 1.2rem;
+    color: var(--gris-moyen);
+    margin: 0 0 1rem;
 }
-.knowledge-item[data-type="qna"] .type {
-    background: #FF7043; /* Même orange que par défaut pour Q&A */
+
+/* Responsivité */
+@media (max-width: 768px) {
+    .knowledge-header {
+        padding: 1.5rem;
+    }
+
+    .knowledge-header h1 {
+        font-size: 2rem;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .knowledge-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .item-header h2 {
+        font-size: 1.2rem;
+    }
 }

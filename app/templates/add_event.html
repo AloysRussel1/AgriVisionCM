@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{% if event %}Modifier{% else %}Créer{% endif %} un Événement - AgriVisionCM{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_event.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="add-header">
+    <h1>{% if event %}Modifier{% else %}Créer{% endif %} un <span class="highlight">Événement</span></h1>
+    <div class="header-meta">
+        <p>{% if event %}Modifiez les détails de cet événement{% else %}Ajoutez un webinaire ou une réunion communautaire{% endif %}.</p>
+        <a href="{{ url_for('main.events') }}" class="cta-back"><i class="fas fa-arrow-left"></i> Retour</a>
+    </div>
+</section>
+
+<section class="form-container">
+    <form method="POST" action="{{ url_for('main.add_event', id=event.id if event else None) }}">
+        <div class="form-group">
+            <label for="title"><i class="fas fa-heading"></i> Titre :</label>
+            <input type="text" id="title" name="title" class="form-input" value="{{ event.title if event else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description"><i class="fas fa-align-left"></i> Description :</label>
+            <textarea id="description" name="description" class="form-textarea">{{ event.description if event else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="start_time"><i class="fas fa-clock"></i> Début :</label>
+            <input type="datetime-local" id="start_time" name="start_time" class="form-input" value="{{ event.start_time.strftime('%Y-%m-%dT%H:%M') if event else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="end_time"><i class="fas fa-clock"></i> Fin :</label>
+            <input type="datetime-local" id="end_time" name="end_time" class="form-input" value="{{ event.end_time.strftime('%Y-%m-%dT%H:%M') if event else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="location"><i class="fas fa-map-marker-alt"></i> Lieu / Lien :</label>
+            <input type="text" id="location" name="location" class="form-input" value="{{ event.location if event else '' }}" placeholder="Adresse ou URL">
+        </div>
+        <div class="form-group">
+            <label for="type"><i class="fas fa-tag"></i> Type :</label>
+            <select id="type" name="type" class="form-select" required>
+                <option value="webinaire" {% if event and event.type == 'webinaire' %}selected{% endif %}>Webinaire</option>
+                <option value="réunion locale" {% if event and event.type == 'réunion locale' %}selected{% endif %}>Réunion Locale</option>
+            </select>
+        </div>
+        <button type="submit" class="cta-button"><i class="fas fa-{% if event %}save{% else %}paper-plane{% endif %}"></i> {% if event %}Enregistrer{% else %}Créer{% endif %}</button>
+    </form>
+</section>
+{% endblock %}

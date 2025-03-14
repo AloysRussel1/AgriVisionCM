@@ -2,13 +2,13 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from app.model.user_model import User
 from app.model.knowledge_share_model import KnowledgeShare
-from app.model.resource_model import Resource
 from app.model.comment_model import Comment
 from app.model.reaction_model import Reaction
 from app.model.forum_model import Forum
 from app.model.product_model import Product
 from app.model.message_model import Message
 from app.model.notification_model import Notification
+from app.model.event_model import Event
 from app import socketio
 from flask_socketio import emit, join_room, leave_room
 from . import db
@@ -58,10 +58,6 @@ def authentification():
 @main.route('/community')
 def community():
     return render_template('community.html', title='Communauté')
-
-@main.route('/events')
-def events():
-    return render_template('events.html', title='Événements')
 
 # Profil Utilisateur
 @main.route('/profile')
@@ -306,21 +302,16 @@ def chat_history():
 
 
 # Connaissance
-@main.route('/knowledge')
-@login_required
-def knowledge_share():
-    knowledge_items = KnowledgeShare.query.filter_by(user_id=current_user.id).order_by(KnowledgeShare.created_at.desc()).all()
-    return render_template('knowledge_share.html', knowledge_items=knowledge_items)
+# Dictionnaire des extensions autorisées par type
+ALLOWED_EXTENSIONS = {'pdf': 'article', 'mp4': 'video'}
 
-@main.route('/knowledge/<int:id>')
-@login_required
-def view_knowledge(id):
-    item = KnowledgeShare.query.get_or_404(id)
-    if item.user_id != current_user.id:
-        return redirect(url_for('main.knowledge_share'))
-    return render_template('view_knowledge.html', item=item)
+# Fonction pour vérifier si le fichier est autorisé
+def allowed_file(filename, expected_type):
+    ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+    return ext in ALLOWED_EXTENSIONS and ALLOWED_EXTENSIONS[ext] == expected_type
 
 @main.route('/add_knowledge', methods=['GET', 'POST'])
+@login_required
 def add_knowledge():
     form = AddKnowledgeForm()
     if request.method == 'POST':
@@ -329,32 +320,139 @@ def add_knowledge():
         knowledge_type = request.form.get('type')
         file = request.files.get('file_upload')
 
-        if not title or not knowledge_type:
-            flash('Le titre et le type sont obligatoires.', 'error')
-            return redirect(url_for('main.add_knowledge'))
+        if not title:
+            flash('Le titre est obligatoire.', 'error')
+            return render_template('add_knowledge.html', form=form)
 
-        file_path = None
-        if file and allowed_file(file.filename):
+        if knowledge_type == 'qna':
+            if not content:
+                flash('Le contenu est requis pour les Q&A.', 'error')
+                return render_template('add_knowledge.html', form=form)
+            knowledge = KnowledgeShare(
+                title=title,
+                content=content,
+                type=knowledge_type,
+                user_id=current_user.id
+            )
+        else:  # article ou video
+            if not file or not file.filename:
+                flash('Un fichier est requis pour les articles ou vidéos.', 'error')
+                return render_template('add_knowledge.html', form=form)
+            if not allowed_file(file.filename, knowledge_type):
+                flash(f"Seuls les fichiers {'.pdf' if knowledge_type == 'article' else '.mp4'} sont acceptés pour {knowledge_type}.", 'error')
+                return render_template('add_knowledge.html', form=form)
+
             filename = secure_filename(file.filename)
-            file_path = filename
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-        elif file:
-            flash('Type de fichier non autorisé.', 'error')
-            return redirect(url_for('main.add_knowledge'))
 
-        knowledge = KnowledgeShare(
-            title=title,
-            content=content,
-            type=knowledge_type,
-            file_path=file_path,
-            user_id=current_user.id
-        )
+            knowledge = KnowledgeShare(
+                title=title,
+                type=knowledge_type,
+                file_path=file_path,
+                user_id=current_user.id
+            )
+
         db.session.add(knowledge)
         db.session.commit()
         flash('Connaissance ajoutée avec succès !', 'success')
         return redirect(url_for('main.knowledge_share'))
 
     return render_template('add_knowledge.html', form=form)
+
+@main.route('/knowledge')
+@login_required
+def knowledge_share():
+    knowledge_items = KnowledgeShare.query.filter_by(user_id=current_user.id).order_by(KnowledgeShare.created_at.desc()).all()
+    return render_template('knowledge_share.html', knowledge_items=knowledge_items, title="Partage de Connaissances")
+
+@main.route('/knowledge/<int:id>')
+@login_required
+def view_knowledge(id):
+    item = KnowledgeShare.query.get_or_404(id)
+    if item.user_id != current_user.id:
+        flash('Vous n’êtes pas autorisé à voir ce contenu.', 'error')
+        return redirect(url_for('main.knowledge_share'))
+    return render_template('view_knowledge.html', item=item)
+
+# Events
+
+@main.route('/events')
+@login_required
+def events():
+    events = Event.query.filter_by(user_id=current_user.id).order_by(Event.start_time.asc()).all()
+    return render_template('events.html', events=events)
+
+@main.route('/add_event', methods=['GET', 'POST'])
+@main.route('/add_event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def add_event(id=None):
+    event = None
+    if id:
+        event = Event.query.get_or_404(id)
+        if event.user_id != current_user.id:
+            flash('Vous n’êtes pas autorisé à modifier cet événement.', 'error')
+            return redirect(url_for('main.events'))
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        start_time = request.form.get('start_time')
+        end_time = request.form.get('end_time')
+        location = request.form.get('location')
+        event_type = request.form.get('type')
+
+        if not all([title, start_time, end_time]):
+            flash('Le titre, la date de début et de fin sont obligatoires.', 'error')
+            return render_template('add_event.html', event=event)
+
+        try:
+            start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+            end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+            if end_time <= start_time:
+                flash('La date de fin doit être après la date de début.', 'error')
+                return render_template('add_event.html', event=event)
+        except ValueError:
+            flash('Format de date invalide.', 'error')
+            return render_template('add_event.html', event=event)
+
+        if event:  # Mise à jour d’un événement existant
+            event.title = title
+            event.description = description
+            event.start_time = start_time
+            event.end_time = end_time
+            event.location = location
+            event.type = event_type
+            flash('Événement mis à jour avec succès !', 'success')
+        else:  # Création d’un nouvel événement
+            event = Event(
+                title=title,
+                description=description,
+                start_time=start_time,
+                end_time=end_time,
+                location=location,
+                type=event_type,
+                user_id=current_user.id
+            )
+            db.session.add(event)
+            flash('Événement créé avec succès !', 'success')
+
+        db.session.commit()
+        return redirect(url_for('main.events'))
+
+    return render_template('add_event.html', event=event)
+
+@main.route('/delete_event/<int:id>', methods=['POST'])
+@login_required
+def delete_event(id):
+    event = Event.query.get_or_404(id)
+    if event.user_id != current_user.id:
+        return jsonify({'success': False, 'message': 'Non autorisé'})
+    
+    db.session.delete(event)
+    db.session.commit()
+    return jsonify({'success': True})
+
 
 # Forum
 @main.route('/forums')
@@ -383,7 +481,6 @@ def new_forum():
 @login_required
 def forum_detail(forum_id):
     forum_thread = Forum.query.get_or_404(forum_id)
-    forum_thread.comments_list = Comment.query.filter_by(forum_id=forum_id).all()
     
     if request.method == 'POST':
         comment_content = request.form.get('comment')
@@ -518,10 +615,10 @@ def category(category):
 def resource(resource_id):
     return render_template('resource.html', resource_id=resource_id, title=f'Ressource - {resource_id.replace("-", " ").capitalize()}')
 
-# Utilitaires
-def allowed_file(filename):
-    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+# # Utilitaires
+# def allowed_file(filename):
+#     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 @main.route('/uploads/<path:filename>')
 def uploaded_file(filename):

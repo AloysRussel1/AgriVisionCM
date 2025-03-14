@@ -1,57 +1,79 @@
-{% extends "base.html" %} 
-{% block title %}Partage de Connaissances - AgriVisionCM{% endblock %} 
-{% block styles %} 
+{% extends "base.html" %}
+{% block title %}Partage de Connaissances - AgriVisionCM{% endblock %}
+
+{% block styles %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_share.css') }}" />
-{% endblock %} 
-{% block scripts %} 
-    {{ super() }}
-    <script src="{{ url_for('static', filename='js/knowledge_share.js') }}"></script>
-{% endblock %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/knowledge_share.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
 {% block content %}
-<section class="page-title">
+<section class="knowledge-header">
     <h1>Partage de <span class="highlight">Connaissances</span></h1>
-    <p>Explorez, apprenez et partagez vos connaissances agricoles.</p>
+    <div class="header-meta">
+        <p>Explorez, apprenez et partagez vos savoirs agricoles.</p>
+        <div class="header-actions">
+            <a href="{{ url_for('main.add_knowledge') }}" class="cta-button"><i class="fas fa-plus"></i> Contribuer</a>
+        </div>
+    </div>
 </section>
 
 <section class="knowledge-controls">
-    <a href="{{ url_for('main.add_knowledge') }}" class="cta-button">Contribuer</a>
     <div class="filter-section">
-        <button class="filter-button active" data-filter="all">Tous</button>
-        <button class="filter-button" data-filter="article">Articles</button>
-        <button class="filter-button" data-filter="video">Vidéos</button>
-        <button class="filter-button" data-filter="qna">Q&A</button>
+        <button class="filter-button active" data-filter="all"><i class="fas fa-th-large"></i> Tous</button>
+        <button class="filter-button" data-filter="article"><i class="fas fa-file-pdf"></i> Articles</button>
+        <button class="filter-button" data-filter="video"><i class="fas fa-video"></i> Vidéos</button>
+        <button class="filter-button" data-filter="qna"><i class="fas fa-question-circle"></i> Q&A</button>
     </div>
 </section>
 
 <section class="knowledge-grid">
-    {% for item in knowledge_items %}
-    <article class="knowledge-item" data-type="{{ item.type }}">
-        <div class="item-content">
-            <h2>{{ item.title }}</h2>
-            <p class="info">Par {{ item.user.username }} | {{ item.created_at.strftime('%d/%m/%Y') }}</p>
+    {% if knowledge_items|length > 0 %}
+        {% for item in knowledge_items %}
+        <article class="knowledge-item" data-type="{{ item.type }}">
+            <div class="item-header">
+                <h2>{{ item.title }}</h2>
+                <span class="type-badge">{{ item.type|capitalize }}</span>
+            </div>
+            <div class="item-meta">
+                <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar" class="avatar">
+                <p>Par <span class="author">{{ item.user.username }}</span> • {{ item.created_at.strftime('%d %b %Y') }}</p>
+            </div>
             <div class="item-body">
-                {% if item.type == 'image' and item.file_path %}
-                    <img src="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" alt="Image partagée" class="preview-image">
+                {% if item.type == 'article' and item.file_path %}
+                    <i class="fas fa-file-pdf fa-2x"></i>
+                    <p>Fichier PDF : {{ item.file_path.split('/')[-1] }}</p>
                 {% elif item.type == 'video' and item.file_path %}
-                    <video controls class="preview-video">
+                    <video class="preview-video" preload="metadata">
                         <source src="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" type="video/mp4">
+                        Votre navigateur ne supporte pas la vidéo.
                     </video>
-                {% else %}
-                    <p>{{ item.content | truncate(200, true) }}</p>
+                {% elif item.type == 'qna' %}
+                    <p>{{ item.content|truncate(200, true) }}</p>
                 {% endif %}
             </div>
             <div class="item-footer">
-                {% if item.file_path %}
-                    <a href="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" class="cta-read" target="_blank">Télécharger</a>
-                {% else %}
-                    <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="cta-read">Lire la suite...</a>
+                {% if item.type == 'article' and item.file_path %}
+                    <a href="{{ url_for('main.uploaded_file', filename=item.file_path.split('/')[-1]) }}" class="cta-read" target="_blank"><i class="fas fa-eye"></i> Ouvrir le PDF</a>
+                {% elif item.type == 'video' and item.file_path %}
+                    <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="cta-read"><i class="fas fa-play"></i> Regarder la vidéo</a>
+                {% elif item.type == 'qna' %}
+                    <a href="{{ url_for('main.view_knowledge', id=item.id) }}" class="cta-read"><i class="fas fa-eye"></i> Lire la suite</a>
                 {% endif %}
             </div>
-        </div>
-    </article>
+        </article>
+        {% endfor %}
     {% else %}
-    <p>Aucune publication trouvée.</p>
-    {% endfor %}
+        <div class="no-content">
+            <i class="fas fa-info-circle"></i>
+            <p>Aucune publication trouvée. Soyez le premier à contribuer !</p>
+            <a href="{{ url_for('main.add_knowledge') }}" class="cta-button"><i class="fas fa-plus"></i> Ajouter une connaissance</a>
+        </div>
+    {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/knowledge_share.js') }}"></script>
 {% endblock %}

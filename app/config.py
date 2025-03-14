@@ -8,3 +8,5 @@ class Config:
     # Dossier de téléchargement des fichiers
     UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    
+

@@ -1,0 +1,129 @@
+:root {
+    --vert-principal: #4CAF50;
+    --vert-fonce: #2E7D32;
+    --orange: #FF8C00;
+    --orange-hover: #e67e22;
+    --gris-clair: #f4f4f4;
+    --gris-moyen: #777;
+    --gris-fonce: #333;
+    --blanc: #fff;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--gris-clair);
+}
+
+.add-header {
+    background: var(--blanc);
+    padding: 2rem;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto 0;
+    max-width: 800px;
+}
+
+.add-header h1 {
+    font-size: 2.5rem;
+    color: var(--vert-fonce);
+    margin: 0 0 1rem 0;
+}
+
+.add-header .highlight {
+    color: var(--orange);
+}
+
+.header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-meta p {
+    font-size: 1.1rem;
+    color: var(--gris-moyen);
+}
+
+.cta-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--vert-principal);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.cta-back:hover {
+    background: var(--vert-principal);
+    color: var(--blanc);
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background: var(--blanc);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--vert-fonce);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 0.9rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.cta-button {
+    background: var(--vert-principal);
+    color: var(--blanc);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background: var(--orange);
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    .add-header {
+        padding: 1.5rem;
+    }
+
+    .add-header h1 {
+        font-size: 2rem;
+    }
+}
