@@ -45,6 +45,7 @@
 
 .chat-item:hover {
     background: #e8f0e8; /* Vert clair au survol */
+    text-decoration: none;
 }
 
 .chat-avatar {

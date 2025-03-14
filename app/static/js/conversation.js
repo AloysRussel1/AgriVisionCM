@@ -3,7 +3,6 @@ console.log("📜 Script conversation.js chargé !");
 document.addEventListener("DOMContentLoaded", function () {
     console.log("📝 DOM entièrement chargé !");
 
-    // Vérification de SocketIO
     if (typeof io === "undefined") {
         console.error("❌ SocketIO n'est pas chargé ! Vérifiez la balise script SocketIO.");
         return;
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <p>${data.message}</p>
-                    <span class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span class="timestamp">${data.timestamp}</span> <!-- Utilise le timestamp du serveur -->
                 </div>
             `;
             chatBox.appendChild(messageDiv);
@@ -91,10 +90,18 @@ document.addEventListener("DOMContentLoaded", function () {
         var chatBox = document.getElementById("chat-box");
         var messageDiv = document.createElement("div");
         messageDiv.classList.add("message", "sent");
+        // Générer le timestamp localement pour le message envoyé (cohérence avec le serveur)
+        var timestamp = new Date().toLocaleString('fr-FR', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
         messageDiv.innerHTML = `
             <div class="message-content">
                 <p>${message}</p>
-                <span class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <span class="timestamp">${timestamp}</span>
             </div>
         `;
         chatBox.appendChild(messageDiv);

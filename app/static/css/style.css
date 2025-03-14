@@ -141,3 +141,159 @@ a:hover {
 body {
     padding-bottom: 40px; /* Toujours utile pour éviter que le contenu ne soit masqué */
 }
+
+
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+    color: #2E8B57;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.notification-icon:hover {
+    color: #ffd700;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 18px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 320px;
+    max-height: 450px;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.notification-dropdown:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.notification-dropdown li {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    color: #444;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-prediction::before {
+    content: "\f1fe";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    color: #28a745;
+}
+
+.notification-message::before {
+    content: "\f0e0";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.notification-warning::before {
+    content: "\f071";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    color: #ff9800;
+}
+
+.notification-prediction {
+    background-color: #f4fff4;
+}
+
+.notification-message {
+    background-color: #f4f9ff;
+}
+
+.notification-warning {
+    background-color: #fff8f0;
+}
+
+.notification-prediction:hover {
+    background-color: #e6ffe6;
+}
+
+.notification-message:hover {
+    background-color: #e6f3ff;
+}
+
+.notification-warning:hover {
+    background-color: #ffefd9;
+}
+
+/* Style pour les notifications non lues */
+.notification-dropdown li.unread {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.notification-dropdown li.unread:hover {
+    background-color: #e8e8e8;
+}
+
+.hidden {
+    display: none;
+}
+
+.notification-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-dropdown::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.notification-dropdown::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+}

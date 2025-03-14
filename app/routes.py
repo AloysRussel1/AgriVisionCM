@@ -8,12 +8,16 @@ from app.model.reaction_model import Reaction
 from app.model.forum_model import Forum
 from app.model.product_model import Product
 from app.model.message_model import Message
+from app.model.notification_model import Notification
 from app import socketio
 from flask_socketio import emit, join_room, leave_room
 from . import db
 from app.forms import AddKnowledgeForm
 from app.forms import EditProfileForm
 import os
+
+import requests
+from datetime import datetime
 
 from flask import jsonify, request
 import random
@@ -166,19 +170,65 @@ def add_product():
     return render_template('add_product.html')
 
 # Chat
-@main.route("/conversation/<int:user_id>/<int:product_id>")
+@main.route("/conversation/<int:user_id>", methods=['GET', 'POST'])  # Plus de <int:product_id>
 @login_required
-def conversation(user_id, product_id):
+def conversation(user_id):
     seller = User.query.get_or_404(user_id)
-    product = Product.query.get_or_404(product_id)
-    
+
+    if request.method == 'POST':
+        data = request.get_json()
+        content = data.get('content')
+        product_id = data.get('product_id')  # Toujours envoyé par Socket.IO, mais optionnel
+
+        if not content:
+            return jsonify({'error': 'Le contenu du message est requis'}), 400
+
+        # Utiliser un product_id par défaut si non fourni (par exemple, dernier produit ou 1)
+        last_message = Message.query.filter(
+            ((Message.sender_id == current_user.id) & (Message.receiver_id == user_id)) |
+            ((Message.sender_id == user_id) & (Message.receiver_id == current_user.id))
+        ).order_by(Message.timestamp.desc()).first()
+        product_id = last_message.product_id if last_message and 'product_id' in data else data.get('product_id', 1)  # Fallback à 1
+
+        message = Message(
+            sender_id=current_user.id,
+            receiver_id=user_id,
+            product_id=product_id,
+            content=content,
+            timestamp=datetime.utcnow(),
+            is_read=False
+        )
+        db.session.add(message)
+
+        product = Product.query.get(product_id)
+        notification = Notification(
+            user_id=user_id,
+            message=f"Nouveau message de {current_user.username} concernant {product.name if product else 'un produit'}",
+            type="message",
+            timestamp=datetime.utcnow(),
+            is_read=False
+        )
+        db.session.add(notification)
+
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'message': content,
+            'timestamp': message.timestamp.strftime('%H:%M')
+        })
+
+    # GET : Afficher tous les messages avec cet utilisateur, quel que soit le produit
     messages = Message.query.filter(
-        (Message.sender_id == current_user.id) & (Message.receiver_id == user_id) & (Message.product_id == product_id)
-    ).all() + Message.query.filter(
-        (Message.sender_id == user_id) & (Message.receiver_id == current_user.id) & (Message.product_id == product_id)
+        ((Message.sender_id == current_user.id) & (Message.receiver_id == user_id)) |
+        ((Message.sender_id == user_id) & (Message.receiver_id == current_user.id))
     ).all()
 
     messages.sort(key=lambda msg: msg.timestamp)
+    
+    # Product est optionnel, on prend le dernier ou un défaut
+    last_message = messages[-1] if messages else None
+    product = Product.query.get(last_message.product_id) if last_message else Product.query.first()
     
     return render_template("conversation.html", seller=seller, messages=messages, product=product)
 
@@ -186,7 +236,7 @@ def conversation(user_id, product_id):
 @main.route('/chat_history')
 @login_required
 def chat_history():
-    today = date.today()  # Date actuelle pour le formatage de l’horodatage
+    today = date.today()
     sent_messages = Message.query.filter_by(sender_id=current_user.id).all()
     received_messages = Message.query.filter_by(receiver_id=current_user.id).all()
     all_messages = sent_messages + received_messages
@@ -194,24 +244,22 @@ def chat_history():
     conversations = {}
     for msg in all_messages:
         other_user_id = msg.receiver_id if msg.sender_id == current_user.id else msg.sender_id
-        key = (other_user_id, msg.product_id)
-        if key not in conversations:
-            conversations[key] = {
+        if other_user_id not in conversations:
+            conversations[other_user_id] = {
                 'other_user': User.query.get(other_user_id),
-                'product': Product.query.get(msg.product_id),
                 'last_message': msg,
                 'unread_count': 0
             }
-        if msg.timestamp > conversations[key]['last_message'].timestamp:
-            conversations[key]['last_message'] = msg
-        # Compter les messages non lus (reçus mais pas encore vus)
-        if msg.receiver_id == current_user.id and not msg.is_read:  # Suppose un champ `is_read` dans Message
-            conversations[key]['unread_count'] += 1
+        if msg.timestamp > conversations[other_user_id]['last_message'].timestamp:
+            conversations[other_user_id]['last_message'] = msg
+        if msg.receiver_id == current_user.id and not msg.is_read:
+            conversations[other_user_id]['unread_count'] += 1
 
     conversation_list = list(conversations.values())
     conversation_list.sort(key=lambda x: x['last_message'].timestamp, reverse=True)
 
     return render_template('chat_history.html', conversations=conversation_list, today=today)
+
 
 # Connaissance
 @main.route('/knowledge')
@@ -265,6 +313,48 @@ def add_knowledge():
     return render_template('add_knowledge.html', form=form)
 
 # Forum
+@main.route('/forums')
+@login_required
+def forums():
+    forums = Forum.query.order_by(Forum.created_at.desc()).all()
+    return render_template('forums.html', forums=forums, title="Forum")
+
+@main.route('/forums/new', methods=['GET', 'POST'])
+@login_required
+def new_forum():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        if title and content:
+            new_thread = Forum(title=title, content=content, user_id=current_user.id)
+            db.session.add(new_thread)
+            db.session.commit()
+            flash('Sujet créé avec succès', 'success')
+            return redirect(url_for('main.forums'))
+        else:
+            flash('Le titre et le contenu sont requis.', 'error')
+    return render_template('new_forum.html', title="Nouveau Sujet")
+
+@main.route('/forums/<int:forum_id>', methods=['GET', 'POST'])
+@login_required
+def forum_detail(forum_id):
+    forum_thread = Forum.query.get_or_404(forum_id)
+    forum_thread.comments_list = Comment.query.filter_by(forum_id=forum_id).all()
+    
+    if request.method == 'POST':
+        comment_content = request.form.get('comment')
+        if comment_content:
+            new_comment = Comment(content=comment_content, forum_id=forum_id, user_id=current_user.id)
+            db.session.add(new_comment)
+            db.session.commit()
+            flash('Commentaire ajouté', 'success')
+            return redirect(url_for('main.forum_detail', forum_id=forum_id))
+        else:
+            flash('Le commentaire ne peut pas être vide.', 'error')
+
+    return render_template('forum_detail.html', forum=forum_thread, title=forum_thread.title)
+
+#prediction
 @main.route('/predict_price', methods=['POST'])
 @login_required
 def predict_price():
@@ -294,58 +384,41 @@ def predict_price():
     """
 
     try:
-        # Log du token pour vérification
         token = current_app.config['HUGGINGFACE_API_TOKEN']
-        print(f"Token envoyé : {token}")
-
-        # Appel à l'API Hugging Face
         response = requests.post(
             "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1",
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "inputs": prompt,
-                "parameters": {
-                    "max_new_tokens": 500,
-                    "temperature": 0.7,
-                    "top_p": 0.9,
-                    "do_sample": True
-                }
-            }
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+            json={"inputs": prompt, "parameters": {"max_new_tokens": 500, "temperature": 0.7, "top_p": 0.9, "do_sample": True}}
         )
 
         if response.status_code != 200:
-            print(f"Erreur Hugging Face - Code: {response.status_code}, Réponse: {response.text}")
+            error_notif = Notification(
+                user_id=current_user.id,
+                message=f"Erreur lors de la prédiction pour {product}.",
+                type="warning",
+                timestamp=datetime.utcnow()
+            )
+            db.session.add(error_notif)
+            db.session.commit()
             return jsonify({'error': f'Erreur lors de l’analyse Hugging Face : {response.text}'}), 500
 
         result = response.json()
-        print(f"Réponse brute Hugging Face : {result}")
-
-        # Extraire le texte généré
         interpretation_text = result[0]['generated_text'].strip()
-
-        # Supprimer le prompt de la réponse
         if interpretation_text.startswith(prompt):
             interpretation_text = interpretation_text[len(prompt):].strip()
-        else:
-            # Si le prompt n'est pas au début, on suppose que tout est la réponse utile
-            interpretation_text = interpretation_text.strip()
-
-        # Séparer l'interprétation et les recommandations
-        # On suppose que l'interprétation est le premier paragraphe, suivi des recommandations
         sections = interpretation_text.split('\n\n')
-        if len(sections) >= 1:
-            interpretation = sections[0].strip()
-            recommendations = sections[1:] if len(sections) > 1 else []
-        else:
-            interpretation = "Aucune interprétation fournie."
-            recommendations = []
+        interpretation = sections[0].strip() if len(sections) >= 1 else "Aucune interprétation fournie."
+        recommendations = sections[1:] if len(sections) > 1 else []
 
-        # Log pour vérification
-        print(f"Interprétation extraite : {interpretation}")
-        print(f"Recommandations extraites : {recommendations}")
+        # Ajouter une notification de prédiction
+        prediction_notif = Notification(
+            user_id=current_user.id,
+            message=f"Prédiction terminée pour {product} dans {region} : {simulated_prediction['price']} XAF",
+            type="prediction",
+            timestamp=datetime.utcnow()
+        )
+        db.session.add(prediction_notif)
+        db.session.commit()
 
         return jsonify({
             'price': simulated_prediction['price'],
@@ -356,8 +429,41 @@ def predict_price():
         })
 
     except Exception as e:
-        print(f"Exception dans predict_price: {str(e)}")
+        error_notif = Notification(
+            user_id=current_user.id,
+            message=f"Erreur serveur lors de la prédiction pour {product}.",
+            type="warning",
+            timestamp=datetime.utcnow()
+        )
+        db.session.add(error_notif)
+        db.session.commit()
         return jsonify({'error': f'Erreur serveur : {str(e)}'}), 500
+    
+# Notifications    
+@main.route('/get_notifications', methods=['GET'])
+@login_required
+def get_notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
+    return jsonify([{
+        'id': notif.id,
+        'message': notif.message,
+        'type': notif.type,
+        'timestamp': notif.timestamp.strftime('%H:%M:%S'),
+        'is_read': notif.is_read
+    } for notif in notifications])
+    
+@main.route('/mark_notification_read', methods=['POST'])
+@login_required
+def mark_notification_read():
+    data = request.get_json()
+    notification_id = data.get('notification_id')
+    notification = Notification.query.filter_by(id=notification_id, user_id=current_user.id).first()
+    if notification:
+        notification.is_read = True
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 403
+    
     
 # Routes Dynamiques
 @main.route('/category/')
@@ -385,37 +491,61 @@ def handle_send_message(data):
     sender_id = data.get("sender_id")
     receiver_id = data.get("receiver_id")
     content = data.get("message")
-    product_id = data.get("product_id")
+    product_id = data.get("product_id", 1)
 
-    if not sender_id or not receiver_id or not content or not product_id:
+    if not sender_id or not receiver_id or not content:
         print("⚠️ Erreur: Données invalides reçues.")
         return
 
     print(f"💾 Enregistrement du message : {content} de {sender_id} vers {receiver_id} pour le produit {product_id}")
 
-    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content, product_id=product_id)
+    message = Message(
+        sender_id=sender_id,
+        receiver_id=receiver_id,
+        content=content,
+        product_id=product_id,
+        timestamp=datetime.utcnow(),
+        is_read=False
+    )
     db.session.add(message)
+
+    sender = User.query.get(sender_id)
+    #product = Product.query.get(product_id)
+
+    notification = Notification(
+        user_id=receiver_id,
+        message=f"Nouveau message de {sender.username}",
+        type="message",
+        timestamp=datetime.utcnow(),
+        is_read=False
+    )
+    db.session.add(notification)
+
     db.session.commit()
+    print(f"✅ Notification créée pour user_id={receiver_id}: {notification.message}")
 
     room = f"chat_{min(sender_id, receiver_id)}_{max(sender_id, receiver_id)}"
     emit("receive_message", {
         "sender_id": sender_id,
         "receiver_id": receiver_id,
         "message": content,
-        "product_id": product_id
+        "product_id": product_id,
+        "timestamp": message.timestamp.strftime('%d/%m/%Y %H:%M')  # Date complète
     }, room=room)
 
-@socketio.on("join_room")
+
+@socketio.on('join_room')
 def handle_join_room(data):
     room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
     join_room(room)
-    print(f"Utilisateur {data['user1']} a rejoint la salle {room}")
+    print(f"🚪 Utilisateur a rejoint la room: {room}")
 
-@socketio.on("leave_room")
+
+@socketio.on('leave_room')
 def handle_leave_room(data):
     room = f"chat_{min(data['user1'], data['user2'])}_{max(data['user1'], data['user2'])}"
     leave_room(room)
-    print(f"Utilisateur {data['user1']} a quitté la salle {room}")
+    print(f"🏃 Utilisateur a quitté la room: {room}")
 
 @socketio.on('new_comment')
 def handle_new_comment(data):

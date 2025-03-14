@@ -16,12 +16,12 @@
     <div class="chat-list">
         {% if conversations %}
             {% for convo in conversations %}
-            <a href="{{ url_for('main.conversation', user_id=convo['other_user'].id, product_id=convo['product'].id) }}" class="chat-item">
+            <a href="{{ url_for('main.conversation', user_id=convo['other_user'].id) }}" class="chat-item">
                 <div class="chat-avatar">
                     <span>{{ convo['other_user'].username[0].upper() }}</span>
                 </div>
                 <div class="chat-details">
-                    <h3>{{ convo['other_user'].username }} <span class="product-name">({{ convo['product'].name }})</span></h3>
+                    <h3>{{ convo['other_user'].username }}</h3>
                     <p class="last-message">{{ convo['last_message'].content[:50] }} {% if convo['last_message'].content|length > 50 %}...{% endif %}</p>
                     <span class="timestamp">{{ convo['last_message'].timestamp.strftime('%d/%m/%Y %H:%M') }}</span>
                 </div>

@@ -20,7 +20,7 @@
             <div class="message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}">
                 <div class="message-content">
                     <p>{{ message.content }}</p>
-                    <span class="timestamp">{{ message.timestamp.strftime('%H:%M') }}</span>
+                    <span class="timestamp">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</span>
                 </div>
             </div>
         {% endfor %}
@@ -34,7 +34,7 @@
 <script>
     var currentUserId = {{ current_user.id }};
     var sellerId = {{ seller.id }};
-    var productId = {{ product.id }};  // Ajout de productId
+    var productId = {{ product.id }};
 </script>
 <script src="{{ url_for('static', filename='js/conversation.js') }}"></script>
 {% endblock %}

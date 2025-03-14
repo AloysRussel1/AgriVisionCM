@@ -54,7 +54,8 @@ def create_app():
     from .model.knowledge_share_model import KnowledgeShare
     from .model.reaction_model import Reaction
     from .model.product_model import Product
-    from .model.message_model import Message  # Ajoutez si nécessaire pour le chat
+    from .model.message_model import Message  
+    from .model.notification_model import Notification
 
     return app
 
